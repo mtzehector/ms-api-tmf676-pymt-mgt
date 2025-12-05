@@ -1,0 +1,148 @@
+{
+  "uuid": "23d671d4-d823-466f-bdf3-ae445c9bd749",
+  "lastMigration": 33,
+  "name": "Att",
+  "endpointPrefix": "",
+  "latency": 0,
+  "port": 3002,
+  "hostname": "",
+  "folders": [],
+  "routes": [
+    {
+      "uuid": "8aaffeaa-6dd9-4b97-822f-d92249da7cec",
+      "type": "http",
+      "documentation": "",
+      "method": "post",
+      "endpoint": "doTopup",
+      "responses": [
+        {
+          "uuid": "4de16967-cd14-477a-84af-df567c64064e",
+          "body": "{\n  \"dateProcessing\": \"{{now}}\",\n  \"code\": \"94\",\n  \"messageCode\": \"INVALID_TRANSACTION\"\n}",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "",
+          "headers": [],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": false,
+          "crudKey": "id",
+          "callbacks": []
+        },
+        {
+          "uuid": "209dc5da-fd25-463c-b7f2-664a01a24251",
+          "body": "{\n    \"dateProcessing\": \"{{now}}\",\n    \"confirmationId\": \"{{faker 'number.int' min=100000 max=999999}}\",\n    \"code\": \"0\",\n    \"messageCode\": \"VALID\"\n}",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "",
+          "headers": [],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": true,
+          "crudKey": "id",
+          "callbacks": []
+        }
+      ],
+      "responseMode": null,
+      "streamingMode": null,
+      "streamingInterval": 0
+    },
+    {
+      "uuid": "31fbccc6-2ce5-4981-8b6f-a02f5edeb263",
+      "type": "http",
+      "documentation": "",
+      "method": "post",
+      "endpoint": "doReverse",
+      "responses": [
+        {
+          "uuid": "0fc33fb2-733e-4e59-8236-23ab0ea9c5b5",
+          "body": "{\n\t\"retorno\":0,\n\t\"messageCode\":\"RETORNO CONFIRMADO\"\n}",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "",
+          "headers": [],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": true,
+          "crudKey": "id",
+          "callbacks": []
+        }
+      ],
+      "responseMode": "RANDOM",
+      "streamingMode": null,
+      "streamingInterval": 0
+    }
+  ],
+  "rootChildren": [
+    {
+      "type": "route",
+      "uuid": "8aaffeaa-6dd9-4b97-822f-d92249da7cec"
+    },
+    {
+      "type": "route",
+      "uuid": "31fbccc6-2ce5-4981-8b6f-a02f5edeb263"
+    }
+  ],
+  "proxyMode": false,
+  "proxyHost": "",
+  "proxyRemovePrefix": false,
+  "tlsOptions": {
+    "enabled": false,
+    "type": "CERT",
+    "pfxPath": "",
+    "certPath": "",
+    "keyPath": "",
+    "caPath": "",
+    "passphrase": ""
+  },
+  "cors": true,
+  "headers": [
+    {
+      "key": "Content-Type",
+      "value": "application/json"
+    },
+    {
+      "key": "Access-Control-Allow-Origin",
+      "value": "*"
+    },
+    {
+      "key": "Access-Control-Allow-Methods",
+      "value": "GET,POST,PUT,PATCH,DELETE,HEAD,OPTIONS"
+    },
+    {
+      "key": "Access-Control-Allow-Headers",
+      "value": "Content-Type, Origin, Accept, Authorization, Content-Length, X-Requested-With"
+    }
+  ],
+  "proxyReqHeaders": [
+    {
+      "key": "",
+      "value": ""
+    }
+  ],
+  "proxyResHeaders": [
+    {
+      "key": "",
+      "value": ""
+    }
+  ],
+  "data": [],
+  "callbacks": []
+}

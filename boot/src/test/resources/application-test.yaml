@@ -1,0 +1,28 @@
+spring:
+  security:
+    user:
+      name: usrtmf654
+      password: "{noop}sup$rsecur$-Pr3p4y"
+  application:
+    name: agreement-management-top-up-hub
+  datasource:
+    url: jdbc:h2:mem:repository;DB_CLOSE_DELAY=-1;MODE=PostgreSQL;
+    driver-class-name: org.h2.Driver
+    username: sa
+    password: password
+  jpa:
+    hibernate:
+      ddl-auto: none
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+external:
+  topUp:
+    url: http://localhost:3000/
+    endpoints:
+      doTopUp: /doTopup
+      reverseTopUp: /doReverse
+    auth:
+      user: your-username
+      password: your-password

@@ -49,6 +49,7 @@
 		<spring-boot.version>3.3.0</spring-boot.version>
 		<resilience4j.version>2.3.0</resilience4j.version>
 		<att.logger.version>0.0.1</att.logger.version>
+		<sonar.organization>mtzehector</sonar.organization>
 	</properties>
 
 	<dependencyManagement>
@@ -86,6 +87,7 @@
 
 
 	<dependencies>
+	
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter</artifactId>

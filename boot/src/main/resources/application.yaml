@@ -1,0 +1,32 @@
+
+# Conmutador de versión HTTP para el cliente del conector (default 1_1)
+paymentsportal:
+  connector:
+    http-version: ${PAYMENTSPORTAL_CONNECTOR_HTTP_VERSION:1_1}
+    base-url: ${PAYMENTSPORTAL_CONNECTOR_BASE_URL:https://coremgmtdev.pre-prod.mx.att.com/paymentsportal-connector}
+    token:
+      default-expires-in: ${PAYMENTSPORTAL_TOKEN_EXPIRES_IN:3600}
+      default-scope: ${PAYMENTSPORTAL_TOKEN_SCOPE:payment_api}
+      default-token-type: ${PAYMENTSPORTAL_TOKEN_TYPE:Bearer}
+# Configuración del servidor
+server:
+  port: 16600
+app:
+  security:
+    enabled: false
+spring:
+  security:
+    basic:
+      enabled: false
+# SSL para clientes HTTPS (conectores TMF676)
+tmf676:
+  ssl:
+    trust-store: classpath:coremgmt-truststore.jks
+    trust-store-password: ${PAYMENTS_SECRET:?}
+    trust-store-type: JKS
+
+logging:
+  level:
+    mx.att.digital.api: DEBUG
+    org.springframework.web.client.RestTemplate: DEBUG
+    org.apache.hc.client5.http: DEBUG
