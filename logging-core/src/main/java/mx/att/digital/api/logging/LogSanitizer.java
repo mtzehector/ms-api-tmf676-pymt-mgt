@@ -1,12 +1,16 @@
 package mx.att.digital.api.logging;
 
+import java.lang.reflect.Field;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
+import java.util.stream.Collectors;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.lang.reflect.Field;
-import java.util.*;
-import java.util.Map.Entry;
-import java.util.stream.Collectors;
 
 /**
  * The Class LogSanitizer.
@@ -109,7 +113,7 @@ public class LogSanitizer {
         if (obj instanceof Collection<?>) {
             return ((Collection<?>) obj).stream()
                     .map(LogSanitizer::sanitizeObject)
-                    .toList();
+                    .collect(Collectors.toList());
         }
 
         // Handle maps
@@ -125,6 +129,7 @@ public class LogSanitizer {
         Logger log = LoggerFactory.getLogger(LogSanitizer.class);
         Map<String, Object> sanitized = new HashMap<>();
         for (Field field : obj.getClass().getDeclaredFields()) {
+            //Public complex objects field.setAccessible(false);
             Object value = null;
             try {
                 value = field.get(obj);

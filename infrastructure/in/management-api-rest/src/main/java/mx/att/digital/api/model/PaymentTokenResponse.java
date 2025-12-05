@@ -7,7 +7,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class PaymentTokenResponse {
 
     private String token;
-    
+    private String tokenType;
 
     @JsonProperty("source")
     private String providerSystem;
@@ -17,14 +17,16 @@ public class PaymentTokenResponse {
     public PaymentTokenResponse() {
     }
 
-    public PaymentTokenResponse(String token,  String providerSystem) {
+    public PaymentTokenResponse(String token, String tokenType, String providerSystem) {
         this.token = token;
+        this.tokenType = tokenType;
         this.providerSystem = providerSystem;
     }
 
     // Nuevo constructor que permite también el message del simulador
-    public PaymentTokenResponse(String token, String providerSystem, String message) {
+    public PaymentTokenResponse(String token, String tokenType, String providerSystem, String message) {
         this.token = token;
+        this.tokenType = tokenType;
         this.providerSystem = providerSystem;
         this.message = message;
     }
@@ -37,9 +39,13 @@ public class PaymentTokenResponse {
         this.token = token;
     }
 
-    
+    public String getTokenType() {
+        return tokenType;
+    }
 
-    
+    public void setTokenType(String tokenType) {
+        this.tokenType = tokenType;
+    }
 
     public String getProviderSystem() {
         return providerSystem;

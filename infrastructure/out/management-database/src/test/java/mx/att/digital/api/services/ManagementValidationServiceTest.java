@@ -1,9 +1,9 @@
 package mx.att.digital.api.services;
 
-import mx.att.digital.api.models.AgreementDomain;
 import org.junit.jupiter.api.Test;
-
 import static org.junit.jupiter.api.Assertions.*;
+
+import mx.att.digital.api.models.AgreementDomain;
 
 class ManagementValidationServiceTest {
 

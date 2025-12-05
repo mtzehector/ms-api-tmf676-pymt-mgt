@@ -219,5 +219,5 @@ Build:
 ```
 mvn clean package -DskipTests
 mvn -U -DskipITs clean verify
-java -jar boot\target\ms-api-tmf676-pymt-mgt.jar
+java -jar boot\target\ms-api-tmf676-pymt-mgt.jar --server.port=16600
 ```

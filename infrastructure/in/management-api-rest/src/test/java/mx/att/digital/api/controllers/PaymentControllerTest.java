@@ -2,17 +2,17 @@ package mx.att.digital.api.controllers;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.mock.mockito.MockBean; // <-- volver a este import
 import org.springframework.http.MediaType;
-import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
+
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(controllers = PaymentController.class)
 @AutoConfigureMockMvc(addFilters = false)
@@ -21,7 +21,7 @@ class PaymentControllerTest {
     @Autowired
     private MockMvc mockMvc;
 
-    @MockitoBean
+    @MockBean
     private mx.att.digital.api.connectors.paymentsportal.PaymentsPortalConnectorClient connectorClient;
 
     @Test
@@ -72,9 +72,10 @@ class PaymentControllerTest {
                         .accept(MediaType.APPLICATION_JSON)
                         .content(requestJson))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.paymentMethod.token.externalTokenId").value("token-abc-12345"))
-                .andExpect(jsonPath("$.paymentMethod['@type']").value("AccessToken"))
-                .andExpect(jsonPath("$.paymentMethod.token.provider").value("PaymentsPortal"));
-            
+                .andExpect(jsonPath("$.token").value("token-abc-12345"))
+                .andExpect(jsonPath("$.tokenType").value("SESSION"))
+                .andExpect(jsonPath("$.source").value("paymentsportal-connector"));
+                // Si quieres, también puedes validar el message:
+                // .andExpect(jsonPath("$.message").value("Aqui podriamos colocar la URL"));
     }
 }

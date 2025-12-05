@@ -3,8 +3,11 @@ package mx.att.digital.api.config;
 import org.apache.hc.client5.http.classic.HttpClient;
 import org.apache.hc.client5.http.impl.classic.HttpClients;
 import org.apache.hc.client5.http.impl.io.PoolingHttpClientConnectionManager;
-import org.apache.hc.client5.http.impl.io.PoolingHttpClientConnectionManagerBuilder;
-import org.apache.hc.client5.http.ssl.DefaultClientTlsStrategy;
+import org.apache.hc.client5.http.socket.ConnectionSocketFactory;
+import org.apache.hc.client5.http.socket.PlainConnectionSocketFactory;
+import org.apache.hc.client5.http.ssl.SSLConnectionSocketFactory;
+import org.apache.hc.core5.http.config.Registry;
+import org.apache.hc.core5.http.config.RegistryBuilder;
 import org.apache.hc.core5.ssl.SSLContextBuilder;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -38,10 +41,16 @@ public class RestTemplateConfig676 {
                 )
                 .build();
 
-            PoolingHttpClientConnectionManager connectionManager = PoolingHttpClientConnectionManagerBuilder.create()
-                    .setTlsSocketStrategy(new DefaultClientTlsStrategy(sslContext))
-                    .build();
-            
+            SSLConnectionSocketFactory sslSocketFactory = new SSLConnectionSocketFactory(sslContext);
+
+            Registry<ConnectionSocketFactory> socketFactoryRegistry = RegistryBuilder
+                .<ConnectionSocketFactory>create()
+                .register("https", sslSocketFactory)
+                .register("http", PlainConnectionSocketFactory.getSocketFactory())
+                .build();
+
+            PoolingHttpClientConnectionManager connectionManager =
+                new PoolingHttpClientConnectionManager(socketFactoryRegistry);
             connectionManager.setMaxTotal(100);
             connectionManager.setDefaultMaxPerRoute(10);
 
@@ -55,7 +64,7 @@ public class RestTemplateConfig676 {
             return new RestTemplate(requestFactory);
 
         } catch (Exception ex) {
-            throw new IllegalStateException("Error configurando SSL para TMF676", ex);
+            throw new RuntimeException("Error configurando SSL para TMF676", ex);
         }
     }
 }

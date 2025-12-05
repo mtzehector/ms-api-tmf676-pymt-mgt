@@ -1,5 +1,8 @@
 package mx.att.digital.api.adapters;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import lombok.RequiredArgsConstructor;
@@ -8,8 +11,6 @@ import mx.att.digital.api.models.AgreementDomain;
 import mx.att.digital.api.ports.out.AgreementRepositoryPort;
 import mx.att.digital.api.services.ManagementPersistenceService;
 import mx.att.digital.api.services.ManagementValidationService;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
 
 /**
  * The Class TopUpAdapter.

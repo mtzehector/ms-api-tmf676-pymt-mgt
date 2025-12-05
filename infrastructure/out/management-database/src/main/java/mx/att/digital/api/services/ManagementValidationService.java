@@ -1,8 +1,9 @@
 package mx.att.digital.api.services;
 
+import org.springframework.stereotype.Service;
+
 import lombok.RequiredArgsConstructor;
 import mx.att.digital.api.models.AgreementDomain;
-import org.springframework.stereotype.Service;
 
 /**
  * The Class ManagementValidationService.

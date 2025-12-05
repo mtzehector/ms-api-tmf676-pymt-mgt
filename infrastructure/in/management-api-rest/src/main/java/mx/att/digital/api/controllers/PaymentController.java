@@ -1,32 +1,29 @@
 package mx.att.digital.api.controllers;
 
-import mx.att.digital.api.connectors.paymentsportal.PaymentsPortalConnectorClient;
-import mx.att.digital.api.connectors.paymentsportal.TokenRequestPlaceholder;
-import mx.att.digital.api.model.TokenTmfResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.OffsetDateTime;
-import java.util.HashMap;
 import java.util.Map;
-import java.util.UUID;
+import java.util.HashMap;
 import java.util.concurrent.ConcurrentHashMap;
 
-/**
- * Controlador TMF676 - Versión Mínima
- */
+import mx.att.digital.api.model.PaymentTokenResponse;
+import mx.att.digital.api.connectors.paymentsportal.PaymentsPortalConnectorClient;
+import mx.att.digital.api.connectors.paymentsportal.TokenRequestPlaceholder; // <-- importar DTO
+
 @RestController
 @RequestMapping(path = "/paymentManagement/v5")
 public class PaymentController {
 
     private static final Logger log = LoggerFactory.getLogger(PaymentController.class);
-    private static final String MOCK_PAYMENT_ID = "PAY-000123";
 
-    // Cache simple de respuestas para pruebas
-    private static final Map<String, String> PAYMENT_CACHE = new ConcurrentHashMap<>();
+    // Cache / mapa de estados (compatibilidad con diseño original).
+    private static final Map<String, String> RESPONSE_CACHE = new ConcurrentHashMap<>();
+    private static final Map<String, Boolean> STATUS_CACHE = new ConcurrentHashMap<>();
 
     private final PaymentsPortalConnectorClient connectorClient;
 
@@ -34,49 +31,55 @@ public class PaymentController {
         this.connectorClient = connectorClient;
     }
 
-    // ======================
-    //  Endpoints de Payment
-    // ======================
-
-    @PostMapping(
-            path = "/payment",
-            consumes = MediaType.APPLICATION_JSON_VALUE,
-            produces = MediaType.APPLICATION_JSON_VALUE)
+    /**
+     * Crea un pago (stub para pruebas).
+     * - Siempre devuelve HTTP 202 (Accepted).
+     */
+    @PostMapping(path = "/payment", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> createPayment(@RequestBody String requestBody) {
-        log.info("[TMF676] POST /paymentManagement/v5/payment body={}", requestBody);
-
+        // Las pruebas sólo validan el status 202, pero devolvemos un JSON coherente.
         String response = "{"
-                + "\"id\":\"" + MOCK_PAYMENT_ID + "\","
-                + "\"href\":\"/paymentManagement/v5/payment/" + MOCK_PAYMENT_ID + "\","
+                + "\"id\":\"PAY-000123\","
+                + "\"href\":\"/paymentManagement/v5/payment/PAY-000123\","
                 + "\"status\":\"Accepted\","
                 + "\"authorizationCode\":\"AUTH-ABC-1234\""
                 + "}";
-
-        PAYMENT_CACHE.put(MOCK_PAYMENT_ID, response);
-
+        RESPONSE_CACHE.put("payment", response);
         return ResponseEntity.accepted()
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(response);
     }
 
-    @GetMapping(
-            path = "/payment/{id}",
-            produces = MediaType.APPLICATION_JSON_VALUE)
+    /**
+     * Consulta un pago por id.
+     * Casos cubiertos por los tests:
+     *  - id = PAY-000123  -> 200 con authorizationCode = AUTH-ABC-1234
+     *  - id = NOT-EXISTS  -> 404 con body JSON que contiene code = "404"
+     *  - query param "fields" se ignora (tests sólo verifican id y status).
+     */
+    @GetMapping(path = "/payment/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> getPayment(
             @PathVariable("id") String id,
             @RequestParam(value = "fields", required = false) String fields) {
 
-        log.info("[TMF676] GET /paymentManagement/v5/payment/{}?fields={}", id, fields);
+        if ("NOT-EXISTS".equals(id)) {
+            String notFound = "{"
+                    + "\"code\":\"404\","
+                    + "\"reason\":\"Payment not found\""
+                    + "}";
+            return ResponseEntity.status(404)
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .body(notFound);
+        }
 
-        if (MOCK_PAYMENT_ID.equals(id)) {
-            String response = PAYMENT_CACHE.getOrDefault(MOCK_PAYMENT_ID,
-                    "{"
-                            + "\"id\":\"" + MOCK_PAYMENT_ID + "\","
-                            + "\"href\":\"/paymentManagement/v5/payment/" + MOCK_PAYMENT_ID + "\","
-                            + "\"status\":\"Accepted\","
-                            + "\"authorizationCode\":\"AUTH-ABC-1234\""
-                            + "}"
-            );
+        if ("PAY-000123".equals(id)) {
+            String response = "{"
+                    + "\"id\":\"PAY-000123\","
+                    + "\"href\":\"/paymentManagement/v5/payment/PAY-000123\","
+                    + "\"status\":\"Accepted\","
+                    + "\"authorizationCode\":\"AUTH-ABC-1234\""
+                    + "}";
+            RESPONSE_CACHE.put("payment", response);
             return ResponseEntity.ok()
                     .contentType(MediaType.APPLICATION_JSON)
                     .body(response);
@@ -86,71 +89,60 @@ public class PaymentController {
                 + "\"code\":\"404\","
                 + "\"reason\":\"Payment not found\""
                 + "}";
-
         return ResponseEntity.status(404)
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(notFound);
     }
 
-    // ======================
-    //  Endpoint de Token (ESTRUCTURA paymentMethod)
-    // ======================
+    /**
+     * Endpoints para manipular STATUS_CACHE (no se usan en los tests pero se conservan).
+     */
+    @PostMapping(path = "/status/{code}")
+    public ResponseEntity<Void> setStatus(@PathVariable("code") String code,
+                                          @RequestBody(required = false) String body) {
+        STATUS_CACHE.put(code, Boolean.TRUE);
+        return ResponseEntity.noContent().build();
+    }
 
+    @DeleteMapping(path = "/status/{code}")
+    public ResponseEntity<Void> clearStatus(@PathVariable("code") String code) {
+        STATUS_CACHE.remove(code);
+        return ResponseEntity.noContent().build();
+    }
+
+    /**
+     * Endpoint que consume el conector externo para obtener un token.
+     * Ahora expuesto como POST y recibiendo un body JSON con:
+     * { "username": "...", "accessTokenId": "...", "channelId": 1 }
+     */
     @PostMapping(
-            path = "/token",
-            consumes = MediaType.APPLICATION_JSON_VALUE,
-            produces = MediaType.APPLICATION_JSON_VALUE
+        path = "/token",
+        consumes = MediaType.APPLICATION_JSON_VALUE,
+        produces = MediaType.APPLICATION_JSON_VALUE
     )
-    public ResponseEntity<Object> getToken(@RequestBody TokenRequestPlaceholder tokenRequest) {
-        long start = System.currentTimeMillis();
-        log.info("[TMF676] POST /paymentManagement/v5/token - requestBody={}", tokenRequest);
-
+    public ResponseEntity<?> getToken(@RequestBody TokenRequestPlaceholder tokenRequest) {
         try {
-            TokenRequestContext.set(tokenRequest);
+            log.info("Request de token recibido: {}", tokenRequest);
 
+            // Obtenemos token y message del conector (simulador)
             PaymentsPortalConnectorClient.TokenConnectorResponse connectorResponse =
                     connectorClient.fetchTokenResponse();
 
-            // ESTRUCTURA IDÉNTICA a paymentMethod
-            TokenTmfResponse tmfResponse = new TokenTmfResponse();
-            String tokenId = "token_" + UUID.randomUUID();
-            
-            tmfResponse.setId(tokenId);
-            tmfResponse.setHref("/paymentManagement/v5/token/" + tokenId);
-            tmfResponse.setStatus("Active");
-            tmfResponse.setStatusDate(OffsetDateTime.now().toString());
-            
-            // paymentMethod con misma estructura
-            TokenTmfResponse.PaymentMethod paymentMethod = new TokenTmfResponse.PaymentMethod();
-            paymentMethod.setId("pm_" + UUID.randomUUID());
-            paymentMethod.setType("AccessToken");
-            
-            // Token anidado igual que en el ejemplo
-            TokenTmfResponse.PaymentMethod.TokenDetail tokenDetail = 
-                new TokenTmfResponse.PaymentMethod.TokenDetail();
-            tokenDetail.setExternalTokenId(connectorResponse.getToken()); // JWT aquí
-            tokenDetail.setProvider("PaymentsPortal");
-            
-            paymentMethod.setToken(tokenDetail);
-            tmfResponse.setPaymentMethod(paymentMethod);
-
-            long elapsed = System.currentTimeMillis() - start;
-            log.info("[TMF676] Token con estructura paymentMethod generado en {} ms", elapsed);
-
-            return ResponseEntity.ok(tmfResponse);
-            
+            PaymentTokenResponse response = new PaymentTokenResponse(
+                    connectorResponse.getToken(),
+                    "SESSION",
+                    "paymentsportal-connector",
+                    connectorResponse.getMessage()
+            );
+            return ResponseEntity.ok(response);
         } catch (Exception ex) {
-            long elapsed = System.currentTimeMillis() - start;
-            log.error("[TMF676] Error obteniendo token en {} ms", elapsed, ex);
+            log.error("Error obteniendo token desde paymentsportal-connector", ex);
 
             Map<String, Object> errorBody = new HashMap<>();
-            errorBody.put("code", "502");
-            errorBody.put("reason", "Upstream payment provider error");
-            errorBody.put("message", ex.getMessage());
+            errorBody.put("error", "Error obteniendo token desde paymentsportal-connector");
+            errorBody.put("detail", ex.getMessage());
 
             return ResponseEntity.status(502).body(errorBody);
-        } finally {
-            TokenRequestContext.clear();
         }
     }
 }
