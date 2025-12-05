@@ -84,35 +84,27 @@ class MDCFilterTest {
      * @param expectedHost the expected host
      */
     private void verifyMDC(String expectedTraceId, String expectedRequestId, String expectedMethod,
-                           String expectedEnv, String expectedIp, String expectedHost) {
-        try {
-            doAnswer(invocation -> {
-                assertEquals(expectedTraceId, MDC.get("traceId"));
-                assertEquals(expectedRequestId, MDC.get("requestId"));
-                assertEquals(expectedMethod, MDC.get("method"));
-                assertEquals(expectedEnv, MDC.get("environment"));
-                assertEquals(expectedIp, MDC.get("ipOrigin"));
-                assertEquals(expectedHost, MDC.get("host"));
-                return null;
-            }).when(chain).doFilter(request, response);
-        } catch (Exception e) {
-            fail("Exception during MDC verification: " + e.getMessage());
-        }
+                           String expectedEnv, String expectedIp, String expectedHost) throws Exception {
+        doAnswer(invocation -> {
+            assertEquals(expectedTraceId, MDC.get("traceId"));
+            assertEquals(expectedRequestId, MDC.get("requestId"));
+            assertEquals(expectedMethod, MDC.get("method"));
+            assertEquals(expectedEnv, MDC.get("environment"));
+            assertEquals(expectedIp, MDC.get("ipOrigin"));
+            assertEquals(expectedHost, MDC.get("host"));
+            return null;
+        }).when(chain).doFilter(request, response);
     }
 
     /**
      * Test do filter internal with headers sets MDC values.
      */
     @Test
-    void testDoFilterInternal_withHeaders_setsMDCValues() {
+    void testDoFilterInternal_withHeaders_setsMDCValues() throws Exception {
         configureRequest("trace-123", "client-456", "POST", "PROD", "10.0.0.1", null, "localhost");
         verifyMDC("trace-123", "client-456", "POST", "PROD", "10.0.0.1", "localhost");
 
-        try {
-            mdcFilter.doFilterInternal(request, response, chain);
-        } catch (Exception e) {
-            fail("Exception during filter execution: " + e.getMessage());
-        }
+        mdcFilter.doFilterInternal(request, response, chain);
 
         assertTrue(MDC.getCopyOfContextMap() == null || MDC.getCopyOfContextMap().isEmpty());
     }
@@ -121,25 +113,21 @@ class MDCFilterTest {
      * Test do filter internal missing headers generates defaults.
      */
     @Test
-    void testDoFilterInternal_missingHeaders_generatesDefaults() {
+    void testDoFilterInternal_missingHeaders_generatesDefaults() throws Exception {
         configureRequest(null, null, "GET", null, null, "::1", "myhost");
 
-        try {
-            doAnswer(invocation -> {
-                String traceId = MDC.get("traceId");
-                assertNotNull(traceId);
-                assertEquals(traceId, MDC.get("requestId"));
-                assertEquals("GET", MDC.get("method"));
-                assertEquals("DEV", MDC.get("environment"));
-                assertEquals("127.0.0.1", MDC.get("ipOrigin"));
-                assertEquals("myhost", MDC.get("host"));
-                return null;
-            }).when(chain).doFilter(request, response);
+        doAnswer(invocation -> {
+            String traceId = MDC.get("traceId");
+            assertNotNull(traceId);
+            assertEquals(traceId, MDC.get("requestId"));
+            assertEquals("GET", MDC.get("method"));
+            assertEquals("DEV", MDC.get("environment"));
+            assertEquals("127.0.0.1", MDC.get("ipOrigin"));
+            assertEquals("myhost", MDC.get("host"));
+            return null;
+        }).when(chain).doFilter(request, response);
 
-            mdcFilter.doFilterInternal(request, response, chain);
-        } catch (Exception e) {
-            fail("Exception during filter execution: " + e.getMessage());
-        }
+        mdcFilter.doFilterInternal(request, response, chain);
 
         assertTrue(MDC.getCopyOfContextMap() == null || MDC.getCopyOfContextMap().isEmpty());
     }
@@ -148,26 +136,22 @@ class MDCFilterTest {
      * Test do filter internal trace id empty generates UUID.
      */
     @Test
-    void testDoFilterInternal_traceIdEmpty_generatesUUID() {
+    void testDoFilterInternal_traceIdEmpty_generatesUUID() throws Exception {
         configureRequest("", "client-456", "PUT", "QA", "192.168.1.10", null, "qa-server");
 
-        try {
-            doAnswer(invocation -> {
-                String traceId = MDC.get("traceId");
-                assertNotNull(traceId);
-                assertNotEquals("", traceId);
-                assertEquals("client-456", MDC.get("requestId"));
-                assertEquals("PUT", MDC.get("method"));
-                assertEquals("QA", MDC.get("environment"));
-                assertEquals("192.168.1.10", MDC.get("ipOrigin"));
-                assertEquals("qa-server", MDC.get("host"));
-                return null;
-            }).when(chain).doFilter(request, response);
+        doAnswer(invocation -> {
+            String traceId = MDC.get("traceId");
+            assertNotNull(traceId);
+            assertNotEquals("", traceId);
+            assertEquals("client-456", MDC.get("requestId"));
+            assertEquals("PUT", MDC.get("method"));
+            assertEquals("QA", MDC.get("environment"));
+            assertEquals("192.168.1.10", MDC.get("ipOrigin"));
+            assertEquals("qa-server", MDC.get("host"));
+            return null;
+        }).when(chain).doFilter(request, response);
 
-            mdcFilter.doFilterInternal(request, response, chain);
-        } catch (Exception e) {
-            fail("Exception during filter execution: " + e.getMessage());
-        }
+        mdcFilter.doFilterInternal(request, response, chain);
 
         assertTrue(MDC.getCopyOfContextMap() == null || MDC.getCopyOfContextMap().isEmpty());
     }
@@ -176,15 +160,11 @@ class MDCFilterTest {
      * Test do filter internal request id empty uses trace id as fallback.
      */
     @Test
-    void testDoFilterInternal_requestIdEmpty_usesTraceIdAsFallback() {
+    void testDoFilterInternal_requestIdEmpty_usesTraceIdAsFallback() throws Exception {
         configureRequest("trace-789", "", "PATCH", "STAGE", "192.168.1.1", null, "stage-host");
         verifyMDC("trace-789", "trace-789", "PATCH", "STAGE", "192.168.1.1", "stage-host");
 
-        try {
-            mdcFilter.doFilterInternal(request, response, chain);
-        } catch (Exception e) {
-            fail("Exception during filter execution: " + e.getMessage());
-        }
+        mdcFilter.doFilterInternal(request, response, chain);
 
         assertTrue(MDC.getCopyOfContextMap() == null || MDC.getCopyOfContextMap().isEmpty());
     }
@@ -193,15 +173,11 @@ class MDCFilterTest {
      * Test do filter internal ip is I pv 6 loopback is normalized to I pv 4.
      */
     @Test
-    void testDoFilterInternal_ipIsIPv6Loopback_isNormalizedToIPv4() {
+    void testDoFilterInternal_ipIsIPv6Loopback_isNormalizedToIPv4() throws Exception {
         configureRequest("trace-999", "client-999", "DELETE", "TEST", "0:0:0:0:0:0:0:1", null, "test-host");
         verifyMDC("trace-999", "client-999", "DELETE", "TEST", "127.0.0.1", "test-host");
 
-        try {
-            mdcFilter.doFilterInternal(request, response, chain);
-        } catch (Exception e) {
-            fail("Exception during filter execution: " + e.getMessage());
-        }
+        mdcFilter.doFilterInternal(request, response, chain);
 
         assertTrue(MDC.getCopyOfContextMap() == null || MDC.getCopyOfContextMap().isEmpty());
     }
@@ -210,15 +186,11 @@ class MDCFilterTest {
      * Test do filter internal ip header empty uses remote addr.
      */
     @Test
-    void testDoFilterInternal_ipHeaderEmpty_usesRemoteAddr() {
+    void testDoFilterInternal_ipHeaderEmpty_usesRemoteAddr() throws Exception {
         configureRequest("trace-321", "client-654", "HEAD", "UAT", "", "192.168.0.100", "uat-host");
         verifyMDC("trace-321", "client-654", "HEAD", "UAT", "192.168.0.100", "uat-host");
 
-        try {
-            mdcFilter.doFilterInternal(request, response, chain);
-        } catch (Exception e) {
-            fail("Exception during filter execution: " + e.getMessage());
-        }
+        mdcFilter.doFilterInternal(request, response, chain);
 
         assertTrue(MDC.getCopyOfContextMap() == null || MDC.getCopyOfContextMap().isEmpty());
     }

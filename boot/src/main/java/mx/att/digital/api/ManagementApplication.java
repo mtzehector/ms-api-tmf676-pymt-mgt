@@ -2,15 +2,16 @@ package mx.att.digital.api;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.autoconfigure.domain.EntityScan;
-import org.springframework.context.annotation.ComponentScan;
+import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
+import org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration;
 
 /**
  * The Class ManagementApplication.
  */
-@SpringBootApplication
-@EntityScan("mx.att.digital.api.models")
-@ComponentScan(basePackages = { "mx.att.digital.api" })
+@SpringBootApplication(exclude = {
+	DataSourceAutoConfiguration.class,
+	HibernateJpaAutoConfiguration.class
+})
 public class ManagementApplication {
 	
 	/**

@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>MDCFilter.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">logging-core</a> &gt; <a href="index.source.html" class="el_package">mx.att.digital.api.logging</a> &gt; <span class="el_source">MDCFilter.java</span></div><h1>MDCFilter.java</h1><pre class="source lang-java linenums">package mx.att.digital.api.logging;
+
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import org.slf4j.MDC;
+import org.springframework.core.env.Environment;
+import org.springframework.stereotype.Component;
+import org.springframework.web.filter.OncePerRequestFilter;
+
+import java.io.IOException;
+import java.util.UUID;
+
+/**
+ * The Class MDCFilter.
+ */
+@Component
+public class MDCFilter extends OncePerRequestFilter {
+
+    /** The env. */
+    private final Environment env;
+
+    /**
+     * Instantiates a new MDC filter.
+     *
+     * @param env the env
+     */
+<span class="fc" id="L29">    public MDCFilter(Environment env) {</span>
+<span class="fc" id="L30">        this.env = env;</span>
+<span class="fc" id="L31">    }</span>
+
+    /**
+     * Do filter internal.
+     *
+     * @param request the request
+     * @param response the response
+     * @param chain the chain
+     * @throws ServletException the servlet exception
+     * @throws IOException Signals that an I/O exception has occurred.
+     */
+    @Override
+    protected void doFilterInternal(HttpServletRequest request,
+                                    HttpServletResponse response,
+                                    FilterChain chain)
+            throws ServletException, IOException {
+
+        // Trace ID 
+<span class="fc" id="L49">        String traceId = request.getHeader(&quot;X-Request-Id&quot;);</span>
+<span class="fc bfc" id="L50" title="All 4 branches covered.">        if (traceId == null || traceId.isEmpty()) {</span>
+<span class="fc" id="L51">            traceId = UUID.randomUUID().toString();</span>
+        }
+        // Request ID
+<span class="fc" id="L54">        String requestId = request.getHeader(&quot;X-Request-Id-Client&quot;);</span>
+<span class="fc bfc" id="L55" title="All 4 branches covered.">        if (requestId == null || requestId.isEmpty()) {</span>
+<span class="fc" id="L56">            requestId = traceId;</span>
+        }
+
+        // Método HTTP
+<span class="fc" id="L60">        String method = request.getMethod();</span>
+
+        // Entorno desde perfiles activos (o fallback)
+<span class="fc" id="L63">        String environment = env.getProperty(&quot;spring.profiles.active&quot;);</span>
+<span class="fc bfc" id="L64" title="All 2 branches covered.">        if (environment == null) {</span>
+<span class="fc" id="L65">            environment = &quot;DEV&quot;;</span>
+        }
+
+        // Inyecta en MDC antes de la ejecución
+<span class="fc" id="L69">        MDC.put(&quot;traceId&quot;, traceId);</span>
+<span class="fc" id="L70">        MDC.put(&quot;requestId&quot;, requestId);</span>
+<span class="fc" id="L71">        MDC.put(&quot;method&quot;, method);</span>
+<span class="fc" id="L72">        MDC.put(&quot;environment&quot;, environment);</span>
+        
+        // ✅ Campos adicionales:
+<span class="fc" id="L75">        String ip = request.getHeader(&quot;X-Forwarded-For&quot;);</span>
+<span class="fc bfc" id="L76" title="All 4 branches covered.">        if (ip == null || ip.isEmpty()) {</span>
+<span class="fc" id="L77">            ip = request.getRemoteAddr();</span>
+        }
+<span class="fc bfc" id="L79" title="All 4 branches covered.">        if (&quot;0:0:0:0:0:0:0:1&quot;.equals(ip) || &quot;::1&quot;.equals(ip)) {</span>
+<span class="fc" id="L80">            ip = &quot;127.0.0.1&quot;;</span>
+        }
+<span class="fc" id="L82">        MDC.put(&quot;ipOrigin&quot;, ip);</span>
+<span class="fc" id="L83">        MDC.put(&quot;host&quot;, request.getServerName());</span>
+
+        try {
+<span class="fc" id="L86">            chain.doFilter(request, response);</span>
+        } finally {
+<span class="fc" id="L88">            MDC.clear();</span>
+        }
+<span class="fc" id="L90">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.13.202504020838</span></div></body></html>

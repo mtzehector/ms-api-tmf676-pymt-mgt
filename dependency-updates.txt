@@ -1,0 +1,238 @@
+[INFO] Scanning for projects...
+[WARNING] 
+[WARNING] Some problems were encountered while building the effective model for mx.att.digital.api:management-api-rest:jar:0.0.1
+[WARNING] 'profiles.profile[tmforum].plugins.plugin.(groupId:artifactId)' must be unique but found duplicate declaration of plugin org.apache.maven.plugins:maven-surefire-plugin @ mx.att.digital.api:management-api-rest:${revision}, D:\GIT\CONECTANDO\2025Dic04\ms-api-tmf676-pymt-mgt\infrastructure\in\management-api-rest\pom.xml, line 181, column 12
+[WARNING] 
+[WARNING] Some problems were encountered while building the effective model for mx.att.digital.api:management-domain:jar:0.0.1
+[WARNING] 'build.plugins.plugin.(groupId:artifactId)' must be unique but found duplicate declaration of plugin org.apache.maven.plugins:maven-surefire-plugin @ mx.att.digital.api:management-domain:${revision}, D:\GIT\CONECTANDO\2025Dic04\ms-api-tmf676-pymt-mgt\domain\pom.xml, line 85, column 12
+[WARNING] 
+[WARNING] It is highly recommended to fix these problems because they threaten the stability of your build.
+[WARNING] 
+[WARNING] For this reason, future Maven versions might no longer support building such malformed projects.
+[WARNING] 
+[INFO] ------------------------------------------------------------------------
+[INFO] Reactor Build Order:
+[INFO] 
+[INFO] management                                                         [pom]
+[INFO] management-domain                                                  [jar]
+[INFO] management-application                                             [jar]
+[INFO] management-api-rest                                                [jar]
+[INFO] micro-management-database                                          [jar]
+[INFO] management-boot                                                    [jar]
+[INFO] logging-core                                                       [jar]
+[INFO] 
+[INFO] -------------------< mx.att.digital.api:management >--------------------
+[INFO] Building management 0.0.1                                          [1/7]
+[INFO]   from pom.xml
+[INFO] --------------------------------[ pom ]---------------------------------
+[INFO] 
+[INFO] --- versions:2.18.0:display-dependency-updates (default-cli) @ management ---
+[INFO] The following dependencies in Dependencies have newer versions:
+[INFO]   io.micrometer:micrometer-registry-prometheus ........ 1.15.1 -> 1.16.0
+[INFO]   net.logstash.logback:logstash-logback-encoder ............. 8.1 -> 9.0
+[INFO]   org.junit.jupiter:junit-jupiter-api ............... 5.13.2 -> 6.1.0-M1
+[INFO]   org.junit.jupiter:junit-jupiter-engine ............ 5.13.2 -> 6.1.0-M1
+[INFO]   org.mockito:mockito-core ............................ 5.18.0 -> 5.20.0
+[INFO]   org.mockito:mockito-junit-jupiter ................... 5.18.0 -> 5.20.0
+[INFO]   org.projectlombok:lombok .......................... 1.18.38 -> 1.18.42
+[INFO]   org.springdoc:springdoc-openapi-starter-webmvc-ui ..... 2.2.0 -> 3.0.0
+[INFO]   org.springframework.boot:spring-boot-starter .......... 3.5.3 -> 4.0.0
+[INFO]   org.springframework.boot:spring-boot-starter-actuator ...
+[INFO]                                                           3.5.3 -> 4.0.0
+[INFO]   org.springframework.boot:spring-boot-starter-aop ... 3.5.3 -> 4.0.0-M2
+[INFO] 
+[INFO] The following dependencies in pluginManagement of plugins have newer versions:
+[INFO]   org.springframework.boot:spring-boot-maven-plugin ..... 3.5.3 -> 4.0.0
+[INFO] 
+[INFO] 
+[INFO] ----------------< mx.att.digital.api:management-domain >----------------
+[INFO] Building management-domain 0.0.1                                   [2/7]
+[INFO]   from domain\pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- versions:2.18.0:display-dependency-updates (default-cli) @ management-domain ---
+[INFO] The following dependencies in Dependencies have newer versions:
+[INFO]   io.micrometer:micrometer-registry-prometheus ........ 1.15.1 -> 1.16.0
+[INFO]   net.logstash.logback:logstash-logback-encoder ............. 8.1 -> 9.0
+[INFO]   org.junit.jupiter:junit-jupiter-api ............... 5.13.2 -> 6.1.0-M1
+[INFO]   org.junit.jupiter:junit-jupiter-engine ............ 5.13.2 -> 6.1.0-M1
+[INFO]   org.mockito:mockito-core ............................ 5.18.0 -> 5.20.0
+[INFO]   org.mockito:mockito-junit-jupiter ................... 5.18.0 -> 5.20.0
+[INFO]   org.projectlombok:lombok .......................... 1.18.38 -> 1.18.42
+[INFO]   org.springdoc:springdoc-openapi-starter-webmvc-ui ..... 2.2.0 -> 3.0.0
+[INFO]   org.springframework.boot:spring-boot-starter .......... 3.5.3 -> 4.0.0
+[INFO]   org.springframework.boot:spring-boot-starter-actuator ...
+[INFO]                                                           3.5.3 -> 4.0.0
+[INFO]   org.springframework.boot:spring-boot-starter-aop ... 3.5.3 -> 4.0.0-M2
+[INFO]   org.springframework.boot:spring-boot-starter-validation ...
+[INFO]                                                           3.5.3 -> 4.0.0
+[INFO]   org.springframework.boot:spring-boot-starter-web ...... 3.5.3 -> 4.0.0
+[INFO] 
+[INFO] The following dependencies in pluginManagement of plugins have newer versions:
+[INFO]   org.springframework.boot:spring-boot-maven-plugin ..... 3.5.3 -> 4.0.0
+[INFO] 
+[INFO] 
+[INFO] -------------< mx.att.digital.api:management-application >--------------
+[INFO] Building management-application 0.0.1                              [3/7]
+[INFO]   from application\pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- versions:2.18.0:display-dependency-updates (default-cli) @ management-application ---
+[INFO] The following dependencies in Dependencies have newer versions:
+[INFO]   io.micrometer:micrometer-registry-prometheus ........ 1.15.1 -> 1.16.0
+[INFO]   net.logstash.logback:logstash-logback-encoder ............. 8.1 -> 9.0
+[INFO]   org.junit.jupiter:junit-jupiter-api ............... 5.13.2 -> 6.1.0-M1
+[INFO]   org.junit.jupiter:junit-jupiter-engine ............ 5.13.2 -> 6.1.0-M1
+[INFO]   org.mockito:mockito-core ............................ 5.18.0 -> 5.20.0
+[INFO]   org.mockito:mockito-junit-jupiter ................... 5.18.0 -> 5.20.0
+[INFO]   org.projectlombok:lombok .......................... 1.18.38 -> 1.18.42
+[INFO]   org.springdoc:springdoc-openapi-starter-webmvc-ui ..... 2.2.0 -> 3.0.0
+[INFO]   org.springframework.boot:spring-boot-starter .......... 3.5.3 -> 4.0.0
+[INFO]   org.springframework.boot:spring-boot-starter-actuator ...
+[INFO]                                                           3.5.3 -> 4.0.0
+[INFO]   org.springframework.boot:spring-boot-starter-aop ... 3.5.3 -> 4.0.0-M2
+[INFO] 
+[INFO] The following dependencies in pluginManagement of plugins have newer versions:
+[INFO]   org.springframework.boot:spring-boot-maven-plugin ..... 3.5.3 -> 4.0.0
+[INFO] 
+[INFO] 
+[INFO] ---------------< mx.att.digital.api:management-api-rest >---------------
+[INFO] Building management-api-rest 0.0.1                                 [4/7]
+[INFO]   from infrastructure\in\management-api-rest\pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- versions:2.18.0:display-dependency-updates (default-cli) @ management-api-rest ---
+[INFO] The following dependencies in Dependencies have newer versions:
+[INFO]   com.fasterxml.jackson.core:jackson-annotations ..... 2.19.1 -> 3.0-rc5
+[INFO]   com.fasterxml.jackson.core:jackson-core ............. 2.19.1 -> 2.20.1
+[INFO]   com.fasterxml.jackson.core:jackson-databind ......... 2.19.1 -> 2.20.1
+[INFO]   com.fasterxml.jackson.datatype:jackson-datatype-jsr310 ...
+[INFO]                                                         2.19.1 -> 2.20.1
+[INFO]   io.micrometer:micrometer-registry-prometheus ........ 1.15.1 -> 1.16.0
+[INFO]   net.logstash.logback:logstash-logback-encoder ............. 8.1 -> 9.0
+[INFO]   org.apache.httpcomponents.client5:httpclient5 ...... 5.5 -> 5.6-alpha1
+[INFO]   org.junit.jupiter:junit-jupiter-api ............... 5.13.2 -> 6.1.0-M1
+[INFO]   org.junit.jupiter:junit-jupiter-engine ............ 5.13.2 -> 6.1.0-M1
+[INFO]   org.mockito:mockito-core ............................ 5.18.0 -> 5.20.0
+[INFO]   org.mockito:mockito-junit-jupiter ................... 5.18.0 -> 5.20.0
+[INFO]   org.projectlombok:lombok .......................... 1.18.38 -> 1.18.42
+[INFO]   org.springdoc:springdoc-openapi-starter-webmvc-ui ..... 2.2.0 -> 3.0.0
+[INFO]   org.springframework.boot:spring-boot-starter .......... 3.5.3 -> 4.0.0
+[INFO]   org.springframework.boot:spring-boot-starter-actuator ...
+[INFO]                                                           3.5.3 -> 4.0.0
+[INFO]   org.springframework.boot:spring-boot-starter-aop ... 3.5.3 -> 4.0.0-M2
+[INFO]   org.springframework.boot:spring-boot-starter-test ..... 3.5.3 -> 4.0.0
+[INFO]   org.springframework.boot:spring-boot-starter-validation ...
+[INFO]                                                           3.5.3 -> 4.0.0
+[INFO]   org.springframework.boot:spring-boot-starter-web ...... 3.5.3 -> 4.0.0
+[INFO]   org.springframework.boot:spring-boot-starter-web-services ...
+[INFO]                                                           3.5.3 -> 4.0.0
+[INFO] 
+[INFO] The following dependencies in pluginManagement of plugins have newer versions:
+[INFO]   org.springframework.boot:spring-boot-maven-plugin ..... 3.5.3 -> 4.0.0
+[INFO] 
+[INFO] 
+[INFO] ------------< mx.att.digital.api:micro-management-database >------------
+[INFO] Building micro-management-database 0.0.1                           [5/7]
+[INFO]   from infrastructure\out\management-database\pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- versions:2.18.0:display-dependency-updates (default-cli) @ micro-management-database ---
+[INFO] The following dependencies in Dependencies have newer versions:
+[INFO]   com.h2database:h2 ................................. 2.3.232 -> 2.4.240
+[INFO]   io.micrometer:micrometer-registry-prometheus ........ 1.15.1 -> 1.16.0
+[INFO]   net.logstash.logback:logstash-logback-encoder ............. 8.1 -> 9.0
+[INFO]   org.hibernate:hibernate-core ............... 6.6.18.Final -> 7.2.0.CR3
+[INFO]   org.junit.jupiter:junit-jupiter-api ............... 5.13.2 -> 6.1.0-M1
+[INFO]   org.junit.jupiter:junit-jupiter-engine ............ 5.13.2 -> 6.1.0-M1
+[INFO]   org.mockito:mockito-core ............................ 5.18.0 -> 5.20.0
+[INFO]   org.mockito:mockito-junit-jupiter ................... 5.18.0 -> 5.20.0
+[INFO]   org.postgresql:postgresql ........................... 42.7.7 -> 42.7.8
+[INFO]   org.projectlombok:lombok .......................... 1.18.38 -> 1.18.42
+[INFO]   org.springdoc:springdoc-openapi-starter-webmvc-ui ..... 2.2.0 -> 3.0.0
+[INFO]   org.springframework:spring-test ....................... 6.2.8 -> 7.0.1
+[INFO]   org.springframework.boot:spring-boot-starter .......... 3.5.3 -> 4.0.0
+[INFO]   org.springframework.boot:spring-boot-starter-actuator ...
+[INFO]                                                           3.5.3 -> 4.0.0
+[INFO]   org.springframework.boot:spring-boot-starter-aop ... 3.5.3 -> 4.0.0-M2
+[INFO]   org.springframework.boot:spring-boot-starter-data-jpa ...
+[INFO]                                                           3.5.3 -> 4.0.0
+[INFO]   org.springframework.data:spring-data-commons .......... 3.5.1 -> 4.0.0
+[INFO] 
+[INFO] The following dependencies in pluginManagement of plugins have newer versions:
+[INFO]   org.springframework.boot:spring-boot-maven-plugin ..... 3.5.3 -> 4.0.0
+[INFO] 
+[INFO] 
+[INFO] -----------------< mx.att.digital.api:management-boot >-----------------
+[INFO] Building management-boot 0.0.1                                     [6/7]
+[INFO]   from boot\pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- versions:2.18.0:display-dependency-updates (default-cli) @ management-boot ---
+[INFO] The following dependencies in Dependencies have newer versions:
+[INFO]   com.fasterxml.jackson.core:jackson-databind ......... 2.19.1 -> 2.20.1
+[INFO]   io.micrometer:micrometer-registry-prometheus ........ 1.15.1 -> 1.16.0
+[INFO]   net.logstash.logback:logstash-logback-encoder ............. 8.1 -> 9.0
+[INFO]   org.junit.jupiter:junit-jupiter-api ............... 5.13.2 -> 6.1.0-M1
+[INFO]   org.junit.jupiter:junit-jupiter-engine ............ 5.13.2 -> 6.1.0-M1
+[INFO]   org.mockito:mockito-core ............................ 5.18.0 -> 5.20.0
+[INFO]   org.mockito:mockito-junit-jupiter ................... 5.18.0 -> 5.20.0
+[INFO]   org.projectlombok:lombok .......................... 1.18.38 -> 1.18.42
+[INFO]   org.springdoc:springdoc-openapi-starter-webmvc-ui ..... 2.2.0 -> 3.0.0
+[INFO]   org.springframework.boot:spring-boot-starter .......... 3.5.3 -> 4.0.0
+[INFO]   org.springframework.boot:spring-boot-starter-actuator ...
+[INFO]                                                           3.5.3 -> 4.0.0
+[INFO]   org.springframework.boot:spring-boot-starter-aop ... 3.5.3 -> 4.0.0-M2
+[INFO]   org.springframework.boot:spring-boot-starter-security ...
+[INFO]                                                           3.5.3 -> 4.0.0
+[INFO]   org.springframework.boot:spring-boot-starter-test ..... 3.5.3 -> 4.0.0
+[INFO]   org.springframework.boot:spring-boot-starter-web ...... 3.5.3 -> 4.0.0
+[INFO]   org.springframework.security:spring-security-test ..... 6.5.1 -> 7.0.0
+[INFO]   org.wiremock.integrations:wiremock-spring-boot ....... 3.10.0 -> 4.0.8
+[INFO] 
+[INFO] The following dependencies in pluginManagement of plugins have newer versions:
+[INFO]   org.springframework.boot:spring-boot-maven-plugin ..... 3.5.3 -> 4.0.0
+[INFO] 
+[INFO] 
+[INFO] ---------------< mx.att.digital.api.logger:logging-core >---------------
+[INFO] Building logging-core 0.0.1                                        [7/7]
+[INFO]   from logging-core\pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- versions:2.18.0:display-dependency-updates (default-cli) @ logging-core ---
+[INFO] The following dependencies in Dependencies have newer versions:
+[INFO]   ch.qos.logback:logback-classic ...................... 1.5.18 -> 1.5.21
+[INFO]   io.micrometer:micrometer-registry-prometheus ........ 1.15.1 -> 1.16.0
+[INFO]   net.logstash.logback:logstash-logback-encoder ............. 8.1 -> 9.0
+[INFO]   org.junit.jupiter:junit-jupiter-api ............... 5.13.2 -> 6.1.0-M1
+[INFO]   org.junit.jupiter:junit-jupiter-engine ............ 5.13.2 -> 6.1.0-M1
+[INFO]   org.mockito:mockito-core ............................ 5.18.0 -> 5.20.0
+[INFO]   org.mockito:mockito-junit-jupiter ................... 5.18.0 -> 5.20.0
+[INFO]   org.projectlombok:lombok .......................... 1.18.38 -> 1.18.42
+[INFO]   org.slf4j:slf4j-api ........................... 2.0.17 -> 2.1.0-alpha1
+[INFO]   org.springdoc:springdoc-openapi-starter-webmvc-ui ..... 2.2.0 -> 3.0.0
+[INFO]   org.springframework.boot:spring-boot-starter .......... 3.5.3 -> 4.0.0
+[INFO]   org.springframework.boot:spring-boot-starter-actuator ...
+[INFO]                                                           3.5.3 -> 4.0.0
+[INFO]   org.springframework.boot:spring-boot-starter-aop ... 3.5.3 -> 4.0.0-M2
+[INFO]   org.springframework.boot:spring-boot-starter-web ...... 3.5.3 -> 4.0.0
+[INFO] 
+[INFO] The following dependencies in pluginManagement of plugins have newer versions:
+[INFO]   org.springframework.boot:spring-boot-maven-plugin ..... 3.5.3 -> 4.0.0
+[INFO] 
+[INFO] ------------------------------------------------------------------------
+[INFO] Reactor Summary for management 0.0.1:
+[INFO] 
+[INFO] management ......................................... SUCCESS [  1.055 s]
+[INFO] management-domain .................................. SUCCESS [  0.090 s]
+[INFO] management-application ............................. SUCCESS [  0.071 s]
+[INFO] management-api-rest ................................ SUCCESS [  0.130 s]
+[INFO] micro-management-database .......................... SUCCESS [  0.131 s]
+[INFO] management-boot .................................... SUCCESS [  0.106 s]
+[INFO] logging-core ....................................... SUCCESS [  0.087 s]
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  2.603 s
+[INFO] Finished at: 2025-12-04T22:28:09-06:00
+[INFO] ------------------------------------------------------------------------

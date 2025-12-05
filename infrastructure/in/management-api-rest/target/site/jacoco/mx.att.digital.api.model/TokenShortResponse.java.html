@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>TokenShortResponse.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">management-api-rest</a> &gt; <a href="index.source.html" class="el_package">mx.att.digital.api.model</a> &gt; <span class="el_source">TokenShortResponse.java</span></div><h1>TokenShortResponse.java</h1><pre class="source lang-java linenums">package mx.att.digital.api.model;
+
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+
+/**
+ * Respuesta mínima del endpoint /token.
+ *
+ * Siempre serializa ambos campos, incluso si message es null:
+ * {
+ *   &quot;token&quot;: &quot;...&quot;,
+ *   &quot;message&quot;: null
+ * }
+ */
+@JsonPropertyOrder({ &quot;token&quot;, &quot;message&quot; })
+@JsonInclude(JsonInclude.Include.ALWAYS)
+public class TokenShortResponse {
+
+    private String token;
+    private String message;
+
+<span class="fc" id="L22">    public TokenShortResponse() {</span>
+<span class="fc" id="L23">    }</span>
+
+<span class="nc" id="L25">    public TokenShortResponse(String token, String message) {</span>
+<span class="nc" id="L26">        this.token = token;</span>
+<span class="nc" id="L27">        this.message = message;</span>
+<span class="nc" id="L28">    }</span>
+
+    public String getToken() {
+<span class="fc" id="L31">        return token;</span>
+    }
+
+    public void setToken(String token) {
+<span class="fc" id="L35">        this.token = token;</span>
+<span class="fc" id="L36">    }</span>
+
+    public String getMessage() {
+<span class="fc" id="L39">        return message;</span>
+    }
+
+    public void setMessage(String message) {
+<span class="fc" id="L43">        this.message = message;</span>
+<span class="fc" id="L44">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.13.202504020838</span></div></body></html>

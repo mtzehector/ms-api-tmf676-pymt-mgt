@@ -1,0 +1,5 @@
+# Created at 2025-12-05T12:29:37.547
+Boot Manifest-JAR contains absolute paths in classpath 'D:\GIT\CONECTANDO\2025Dic04\ms-api-tmf676-pymt-mgt\domain\target\test-classes'
+Hint: <argLine>-Djdk.net.URLClassPath.disableClassPathURLCheck=true</argLine>
+'other' has different root
+

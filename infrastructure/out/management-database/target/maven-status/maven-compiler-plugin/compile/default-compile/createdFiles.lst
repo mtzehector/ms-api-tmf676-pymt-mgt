@@ -1,0 +1,3 @@
+mx\att\digital\api\adapters\ManagementAdapter.class
+mx\att\digital\api\services\ManagementPersistenceService.class
+mx\att\digital\api\services\ManagementValidationService.class

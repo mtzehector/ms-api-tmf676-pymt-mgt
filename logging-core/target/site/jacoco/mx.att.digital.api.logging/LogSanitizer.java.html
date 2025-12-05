@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>LogSanitizer.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">logging-core</a> &gt; <a href="index.source.html" class="el_package">mx.att.digital.api.logging</a> &gt; <span class="el_source">LogSanitizer.java</span></div><h1>LogSanitizer.java</h1><pre class="source lang-java linenums">package mx.att.digital.api.logging;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.lang.reflect.Field;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+import java.util.Map.Entry;
+import java.util.stream.Collectors;
+
+/**
+ * The Class LogSanitizer.
+ */
+public class LogSanitizer {
+
+<span class="fc" id="L20">    private static final Logger LOGGER = LoggerFactory.getLogger(LogSanitizer.class);</span>
+
+    /** The Constant VALID_EXTRA_CHARS. */
+<span class="fc" id="L23">    private static final Set&lt;Character&gt; VALID_EXTRA_CHARS = Set.of(</span>
+<span class="fc" id="L24">            '\\', '/', '.', '-', '_', ' ', '=', ':', '#', '\n', ')', '('</span>
+    );
+
+    /** The Constant SENSITIVE_FIELDS. */
+<span class="fc" id="L28">    private static final Set&lt;String&gt; SENSITIVE_FIELDS = Set.of(</span>
+    		&quot;sensitiveData&quot;
+    );
+
+    /**
+     * Instantiates a new log sanitizer.
+     */
+<span class="nc" id="L35">    private LogSanitizer() {</span>
+<span class="nc" id="L36">        throw new IllegalStateException(&quot;Utility class&quot;);</span>
+    }
+
+    /**
+     * Sanitize.
+     *
+     * @param input the input
+     * @return the string
+     */
+    public static String sanitize(String input) {
+<span class="fc bfc" id="L46" title="All 2 branches covered.">        return input == null ? null : cleanString(input.replaceAll(&quot;[\r\n]&quot;, &quot;%&quot;));</span>
+    }
+
+    /**
+     * Sanitize.
+     *
+     * @param input the input
+     * @return the string
+     */
+    public static String sanitize(Object input) {
+<span class="pc bpc" id="L56" title="1 of 2 branches missed.">        return input == null ? null : sanitize(String.valueOf(input));</span>
+    }
+
+    /**
+     * Clean string.
+     *
+     * @param aString the a string
+     * @return the string
+     */
+    public static String cleanString(String aString) {
+<span class="pc bpc" id="L66" title="1 of 2 branches missed.">        if (aString == null) {</span>
+<span class="nc" id="L67">            return null;</span>
+        }
+<span class="fc" id="L69">        StringBuilder cleanString = new StringBuilder();</span>
+<span class="fc bfc" id="L70" title="All 2 branches covered.">        for (int i = 0; i &lt; aString.length(); ++i) {</span>
+<span class="fc" id="L71">            cleanString.append(cleanChar(aString.charAt(i)));</span>
+        }
+<span class="fc" id="L73">        return cleanString.toString();</span>
+    }
+
+    /**
+     * Clean char.
+     *
+     * @param aChar the a char
+     * @return the char
+     */
+    private static char cleanChar(char aChar) {
+<span class="fc bfc" id="L83" title="All 4 branches covered.">        if (Character.isLetterOrDigit(aChar) || VALID_EXTRA_CHARS.contains(aChar)) {</span>
+<span class="fc" id="L84">            return aChar;</span>
+        }
+<span class="fc" id="L86">        return '%';</span>
+    }
+
+    /**
+     * Sanitize object.
+     *
+     * @param obj the obj
+     * @return the object
+     */
+    public static Object sanitizeObject(Object obj) {
+<span class="fc" id="L96">        return sanitizeObject(obj, new HashSet&lt;&gt;());</span>
+    }
+
+    /**
+     * Sanitize object with circular reference tracking.
+     *
+     * @param obj the obj
+     * @param processedObjects set to track processed objects
+     * @return the sanitized object
+     */
+    private static Object sanitizeObject(Object obj, Set&lt;Object&gt; processedObjects) {
+<span class="fc bfc" id="L107" title="All 2 branches covered.">        if (obj == null) return null;</span>
+
+        // If the object has already been processed, return it to avoid circular references
+<span class="pc bpc" id="L110" title="1 of 2 branches missed.">        if (processedObjects.contains(obj)) {</span>
+<span class="nc" id="L111">            return obj;</span>
+        }
+
+        // Mark the object as processed
+<span class="fc" id="L115">        processedObjects.add(obj);</span>
+
+        // Handle simple types
+<span class="fc bfc" id="L118" title="All 6 branches covered.">        if (obj instanceof String || obj instanceof Number || obj instanceof Boolean) {</span>
+<span class="fc" id="L119">            return sanitize(obj);</span>
+        }
+
+        // Handle collections
+<span class="fc bfc" id="L123" title="All 2 branches covered.">        if (obj instanceof Collection&lt;?&gt;) {</span>
+<span class="fc" id="L124">            return ((Collection&lt;?&gt;) obj).stream()</span>
+<span class="fc" id="L125">                    .map(item -&gt; sanitizeObject(item, processedObjects))</span>
+<span class="fc" id="L126">                    .toList();</span>
+        }
+
+        // Handle maps
+<span class="fc bfc" id="L130" title="All 2 branches covered.">        if (obj instanceof Map&lt;?, ?&gt;) {</span>
+<span class="fc" id="L131">            return ((Map&lt;?, ?&gt;) obj).entrySet().stream()</span>
+<span class="fc" id="L132">                    .collect(Collectors.toMap(</span>
+                            Entry::getKey,
+<span class="fc" id="L134">                            e -&gt; sanitizeObject(e.getValue(), processedObjects)</span>
+                    ));
+        }
+
+        // Handle complex objects (POJOs) - only public fields
+<span class="fc" id="L139">        Map&lt;String, Object&gt; sanitized = new HashMap&lt;&gt;();</span>
+<span class="fc bfc" id="L140" title="All 2 branches covered.">        for (Field field : obj.getClass().getFields()) {</span>
+<span class="fc" id="L141">            Object value = null;</span>
+            try {
+<span class="fc" id="L143">                value = field.get(obj);</span>
+<span class="nc" id="L144">            } catch (IllegalAccessException ex) {</span>
+<span class="nc" id="L145">                LOGGER.warn(&quot;Failed to access field: {}&quot;, field.getName(), ex);</span>
+<span class="nc" id="L146">                continue;</span>
+<span class="fc" id="L147">            }</span>
+
+<span class="fc bfc" id="L149" title="All 2 branches covered.">            if (SENSITIVE_FIELDS.contains(field.getName())) {</span>
+<span class="fc" id="L150">                sanitized.put(field.getName(), &quot;***&quot;);</span>
+            } else {
+<span class="fc" id="L152">                sanitized.put(field.getName(), sanitizeObject(value, processedObjects));</span>
+            }
+        }
+<span class="fc" id="L155">        return sanitized;</span>
+    }
+
+    /**
+     * Sanitize exception.
+     *
+     * @param ex the ex
+     * @return the string
+     */
+    public static String sanitizeException(Throwable ex) {
+<span class="fc bfc" id="L165" title="All 2 branches covered.">        if (ex == null) return null;</span>
+<span class="fc" id="L166">        return ex.getClass().getSimpleName() + &quot;: &quot; + ex.getMessage();</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.13.202504020838</span></div></body></html>

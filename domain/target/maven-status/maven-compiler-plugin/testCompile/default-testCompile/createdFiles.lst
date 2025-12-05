@@ -1,0 +1,7 @@
+mx\att\digital\api\model\enums\ResultCodeTest.class
+mx\att\digital\api\error\exception\BalancePlatformConnectionErrorExceptionTest.class
+mx\att\digital\api\error\exception\DomainExceptionHandlerTest.class
+mx\att\digital\api\architecture\ArchitectureTest.class
+mx\att\digital\api\models\AgreementDomainJsonTest.class
+mx\att\digital\api\error\exception\ExternalSystemErrorTest.class
+mx\att\digital\api\error\exception\ExternalSystemErrorTest$1.class

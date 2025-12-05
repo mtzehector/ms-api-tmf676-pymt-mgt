@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>PaymentTokenResponse.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">management-api-rest</a> &gt; <a href="index.source.html" class="el_package">mx.att.digital.api.model</a> &gt; <span class="el_source">PaymentTokenResponse.java</span></div><h1>PaymentTokenResponse.java</h1><pre class="source lang-java linenums">package mx.att.digital.api.model;
+
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+@JsonInclude(JsonInclude.Include.NON_NULL)
+public class PaymentTokenResponse {
+
+    private String token;
+    
+
+    @JsonProperty(&quot;source&quot;)
+    private String providerSystem;
+
+    private String message; // &lt;-- nuevo campo opcional
+
+<span class="fc" id="L17">    public PaymentTokenResponse() {</span>
+<span class="fc" id="L18">    }</span>
+
+<span class="nc" id="L20">    public PaymentTokenResponse(String token,  String providerSystem) {</span>
+<span class="nc" id="L21">        this.token = token;</span>
+<span class="nc" id="L22">        this.providerSystem = providerSystem;</span>
+<span class="nc" id="L23">    }</span>
+
+    // Nuevo constructor que permite también el message del simulador
+<span class="nc" id="L26">    public PaymentTokenResponse(String token, String providerSystem, String message) {</span>
+<span class="nc" id="L27">        this.token = token;</span>
+<span class="nc" id="L28">        this.providerSystem = providerSystem;</span>
+<span class="nc" id="L29">        this.message = message;</span>
+<span class="nc" id="L30">    }</span>
+
+    public String getToken() {
+<span class="fc" id="L33">        return token;</span>
+    }
+
+    public void setToken(String token) {
+<span class="fc" id="L37">        this.token = token;</span>
+<span class="fc" id="L38">    }</span>
+
+    
+
+    
+
+    public String getProviderSystem() {
+<span class="fc" id="L45">        return providerSystem;</span>
+    }
+
+    public void setProviderSystem(String providerSystem) {
+<span class="fc" id="L49">        this.providerSystem = providerSystem;</span>
+<span class="fc" id="L50">    }</span>
+
+    public String getMessage() { // &lt;-- getter
+<span class="fc" id="L53">        return message;</span>
+    }
+
+    public void setMessage(String message) { // &lt;-- setter
+<span class="fc" id="L57">        this.message = message;</span>
+<span class="fc" id="L58">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.13.202504020838</span></div></body></html>

@@ -1,0 +1,12 @@
+D:\GIT\CONECTANDO\2025Dic04\ms-api-tmf676-pymt-mgt\domain\src\main\java\mx\att\digital\api\error\ErrorResponse.java
+D:\GIT\CONECTANDO\2025Dic04\ms-api-tmf676-pymt-mgt\domain\src\main\java\mx\att\digital\api\error\exception\BalancePlatformConnectionErrorException.java
+D:\GIT\CONECTANDO\2025Dic04\ms-api-tmf676-pymt-mgt\domain\src\main\java\mx\att\digital\api\error\exception\DomainExceptionHandler.java
+D:\GIT\CONECTANDO\2025Dic04\ms-api-tmf676-pymt-mgt\domain\src\main\java\mx\att\digital\api\error\exception\ExternalSystemError.java
+D:\GIT\CONECTANDO\2025Dic04\ms-api-tmf676-pymt-mgt\domain\src\main\java\mx\att\digital\api\error\exception\ValidationResponseException.java
+D:\GIT\CONECTANDO\2025Dic04\ms-api-tmf676-pymt-mgt\domain\src\main\java\mx\att\digital\api\models\AgreementDomain.java
+D:\GIT\CONECTANDO\2025Dic04\ms-api-tmf676-pymt-mgt\domain\src\main\java\mx\att\digital\api\models\AgreementItemDomain.java
+D:\GIT\CONECTANDO\2025Dic04\ms-api-tmf676-pymt-mgt\domain\src\main\java\mx\att\digital\api\models\enums\ResultCode.java
+D:\GIT\CONECTANDO\2025Dic04\ms-api-tmf676-pymt-mgt\domain\src\main\java\mx\att\digital\api\models\enums\State.java
+D:\GIT\CONECTANDO\2025Dic04\ms-api-tmf676-pymt-mgt\domain\src\main\java\mx\att\digital\api\models\filtercriteria\TopUpOrderFilterCriteria.java
+D:\GIT\CONECTANDO\2025Dic04\ms-api-tmf676-pymt-mgt\domain\src\main\java\mx\att\digital\api\models\RelatedPartyDomain.java
+D:\GIT\CONECTANDO\2025Dic04\ms-api-tmf676-pymt-mgt\domain\src\main\java\mx\att\digital\api\ports\out\AgreementRepositoryPort.java

@@ -1,0 +1,5 @@
+mx\att\digital\api\ManagementApplication.class
+mx\att\digital\api\config\SecurityConfig.class
+mx\att\digital\api\AppConfig.class
+mx\att\digital\api\config\SecurityOpenConfig.class
+mx\att\digital\api\OpenApiConfig.class

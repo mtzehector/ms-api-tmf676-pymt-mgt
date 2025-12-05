@@ -1,0 +1,17 @@
+GROUP,PACKAGE,CLASS,INSTRUCTION_MISSED,INSTRUCTION_COVERED,BRANCH_MISSED,BRANCH_COVERED,LINE_MISSED,LINE_COVERED,COMPLEXITY_MISSED,COMPLEXITY_COVERED,METHOD_MISSED,METHOD_COVERED
+management-api-rest,mx.att.digital.api.connectors.paymentsportal,TokenRequestPlaceholder,0,36,0,2,0,13,0,9,0,8
+management-api-rest,mx.att.digital.api.connectors.paymentsportal,PaymentsPortalConnectorClient.new ParameterizedTypeReference() {...},0,3,0,0,0,1,0,1,0,1
+management-api-rest,mx.att.digital.api.connectors.paymentsportal,PaymentsPortalConnectorClient.TokenConnectorResponse,0,9,0,0,0,1,0,1,0,1
+management-api-rest,mx.att.digital.api.connectors.paymentsportal,TokenRequestContext,0,16,0,0,0,6,0,4,0,4
+management-api-rest,mx.att.digital.api.connectors.paymentsportal,PaymentsPortalConnectorClient,29,293,6,18,5,63,7,18,1,12
+management-api-rest,mx.att.digital.api.model,PaymentTokenResponse,21,24,0,0,9,11,2,7,2,7
+management-api-rest,mx.att.digital.api.model,TokenShortResponse,9,17,0,0,4,8,1,5,1,5
+management-api-rest,mx.att.digital.api.mappers,TimePeriodMapper,3,0,0,0,1,0,1,0,1,0
+management-api-rest,mx.att.digital.api.mappers,AgreementMapperImpl,3,0,0,0,1,0,1,0,1,0
+management-api-rest,mx.att.digital.api.controllers,PaymentController,0,203,0,4,0,59,0,8,0,6
+management-api-rest,mx.att.digital.api.handlers,ControllerAdvice,0,178,0,2,0,31,0,6,0,5
+management-api-rest,mx.att.digital.api.util.exception,FieldFilteringException,0,5,0,0,0,2,0,1,0,1
+management-api-rest,mx.att.digital.api.config,ApiPathRewriteFilterConfig,12,57,3,5,2,16,2,7,0,5
+management-api-rest,mx.att.digital.api.config,JacksonConfig,0,24,0,0,0,6,0,2,0,2
+management-api-rest,mx.att.digital.api.config,ApiPathRewriteFilterConfig.new OncePerRequestFilter() {...},10,55,2,4,4,15,2,3,0,2
+management-api-rest,mx.att.digital.api.config,RestTemplateConfig676,36,13,0,0,14,4,0,2,0,2

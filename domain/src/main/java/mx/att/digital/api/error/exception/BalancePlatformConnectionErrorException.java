@@ -1,9 +1,8 @@
 package mx.att.digital.api.error.exception;
 
-import org.springframework.web.client.RestClientException;
-
 import lombok.Getter;
 import mx.att.digital.api.models.enums.ResultCode;
+import org.springframework.web.client.RestClientException;
 
 /**
  * The Class BalancePlatformConnectionErrorException.

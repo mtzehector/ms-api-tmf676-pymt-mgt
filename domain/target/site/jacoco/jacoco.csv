@@ -1,0 +1,7 @@
+GROUP,PACKAGE,CLASS,INSTRUCTION_MISSED,INSTRUCTION_COVERED,BRANCH_MISSED,BRANCH_COVERED,LINE_MISSED,LINE_COVERED,COMPLEXITY_MISSED,COMPLEXITY_COVERED,METHOD_MISSED,METHOD_COVERED
+management-domain,mx.att.digital.api.error.exception,ExternalSystemError,0,26,0,0,0,6,0,2,0,2
+management-domain,mx.att.digital.api.error.exception,BalancePlatformConnectionErrorException,0,14,0,0,0,4,0,1,0,1
+management-domain,mx.att.digital.api.error.exception,DomainExceptionHandler,0,111,0,2,0,22,0,5,0,4
+management-domain,mx.att.digital.api.error.exception,ValidationResponseException,28,13,0,0,10,5,2,1,2,1
+management-domain,mx.att.digital.api.models.enums,ResultCode,0,132,0,8,0,18,0,7,0,3
+management-domain,mx.att.digital.api.models.enums,State,27,0,0,0,5,0,1,0,1,0

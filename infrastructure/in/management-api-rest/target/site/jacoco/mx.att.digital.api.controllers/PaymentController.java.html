@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>PaymentController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">management-api-rest</a> &gt; <a href="index.source.html" class="el_package">mx.att.digital.api.controllers</a> &gt; <span class="el_source">PaymentController.java</span></div><h1>PaymentController.java</h1><pre class="source lang-java linenums">package mx.att.digital.api.controllers;
+
+import mx.att.digital.api.connectors.paymentsportal.PaymentsPortalConnectorClient;
+import mx.att.digital.api.connectors.paymentsportal.TokenRequestContext;
+import mx.att.digital.api.connectors.paymentsportal.TokenRequestPlaceholder;
+import mx.att.digital.api.model.TokenTmfResponse;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.time.OffsetDateTime;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
+
+/**
+ * Controlador TMF676 - Versión Mínima
+ */
+@RestController
+@RequestMapping(path = &quot;/paymentManagement/v5&quot;)
+public class PaymentController {
+
+<span class="fc" id="L26">    private static final Logger log = LoggerFactory.getLogger(PaymentController.class);</span>
+    private static final String MOCK_PAYMENT_ID = &quot;PAY-000123&quot;;
+    private static final String JSON_FIELD_ID = &quot;id&quot;;
+    private static final String JSON_FIELD_HREF = &quot;href&quot;;
+    private static final String JSON_FIELD_STATUS = &quot;status&quot;;
+    private static final String JSON_FIELD_AUTH_CODE = &quot;authorizationCode&quot;;
+    private static final String JSON_FIELD_CODE = &quot;code&quot;;
+    private static final String JSON_FIELD_REASON = &quot;reason&quot;;
+    private static final String JSON_FIELD_MESSAGE = &quot;message&quot;;
+    private static final String STATUS_ACCEPTED = &quot;Accepted&quot;;
+    private static final String AUTH_CODE_MOCK = &quot;AUTH-ABC-1234&quot;;
+    private static final String ERROR_CODE_NOT_FOUND = &quot;404&quot;;
+    private static final String ERROR_REASON_NOT_FOUND = &quot;Payment not found&quot;;
+    private static final String ERROR_CODE_BAD_GATEWAY = &quot;502&quot;;
+    private static final String ERROR_REASON_UPSTREAM = &quot;Upstream payment provider error&quot;;
+    private static final String JSON_SEPARATOR = &quot;\&quot;:\&quot;&quot;;
+    private static final String JSON_QUOTE = &quot;\&quot;&quot;;
+
+    // Cache simple de respuestas para pruebas
+<span class="fc" id="L45">    private static final Map&lt;String, String&gt; PAYMENT_CACHE = new ConcurrentHashMap&lt;&gt;();</span>
+
+    private final PaymentsPortalConnectorClient connectorClient;
+
+<span class="fc" id="L49">    public PaymentController(PaymentsPortalConnectorClient connectorClient) {</span>
+<span class="fc" id="L50">        this.connectorClient = connectorClient;</span>
+<span class="fc" id="L51">    }</span>
+
+    // ======================
+    //  Endpoints de Payment
+    // ======================
+
+    @PostMapping(
+            path = &quot;/payment&quot;,
+            consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity&lt;String&gt; createPayment(@RequestBody String requestBody) {
+<span class="fc" id="L62">        String sanitizedBody = sanitizeForLog(requestBody);</span>
+<span class="fc" id="L63">        log.info(&quot;[TMF676] POST /paymentManagement/v5/payment body={}&quot;, sanitizedBody);</span>
+
+<span class="fc" id="L65">        String response = &quot;{&quot;</span>
+                + JSON_QUOTE + JSON_FIELD_ID + JSON_SEPARATOR + MOCK_PAYMENT_ID + &quot;\&quot;,&quot;
+                + JSON_QUOTE + JSON_FIELD_HREF + &quot;\&quot;:\&quot;/paymentManagement/v5/payment/&quot; + MOCK_PAYMENT_ID + &quot;\&quot;,&quot;
+                + JSON_QUOTE + JSON_FIELD_STATUS + JSON_SEPARATOR + STATUS_ACCEPTED + &quot;\&quot;,&quot;
+                + JSON_QUOTE + JSON_FIELD_AUTH_CODE + JSON_SEPARATOR + AUTH_CODE_MOCK + JSON_QUOTE
+                + &quot;}&quot;;
+
+<span class="fc" id="L72">        PAYMENT_CACHE.put(MOCK_PAYMENT_ID, response);</span>
+
+<span class="fc" id="L74">        return ResponseEntity.accepted()</span>
+<span class="fc" id="L75">                .contentType(MediaType.APPLICATION_JSON)</span>
+<span class="fc" id="L76">                .body(response);</span>
+    }
+
+    @GetMapping(
+            path = &quot;/payment/{id}&quot;,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity&lt;String&gt; getPayment(
+            @PathVariable(&quot;id&quot;) String id,
+            @RequestParam(value = &quot;fields&quot;, required = false) String fields) {
+
+        // Sanitize input to prevent log injection
+<span class="fc" id="L87">        String sanitizedId = sanitizeForLog(id);</span>
+<span class="fc" id="L88">        String sanitizedFields = sanitizeForLog(fields);</span>
+<span class="fc" id="L89">        log.info(&quot;[TMF676] GET /paymentManagement/v5/payment/{}?fields={}&quot;, sanitizedId, sanitizedFields);</span>
+
+<span class="fc bfc" id="L91" title="All 2 branches covered.">        if (MOCK_PAYMENT_ID.equals(id)) {</span>
+<span class="fc" id="L92">            String response = PAYMENT_CACHE.getOrDefault(MOCK_PAYMENT_ID,</span>
+                    &quot;{&quot;
+                            + JSON_QUOTE + JSON_FIELD_ID + JSON_SEPARATOR + MOCK_PAYMENT_ID + &quot;\&quot;,&quot;
+                            + JSON_QUOTE + JSON_FIELD_HREF + &quot;\&quot;:\&quot;/paymentManagement/v5/payment/&quot; + MOCK_PAYMENT_ID + &quot;\&quot;,&quot;
+                            + JSON_QUOTE + JSON_FIELD_STATUS + JSON_SEPARATOR + STATUS_ACCEPTED + &quot;\&quot;,&quot;
+                            + JSON_QUOTE + JSON_FIELD_AUTH_CODE + JSON_SEPARATOR + AUTH_CODE_MOCK + JSON_QUOTE
+                            + &quot;}&quot;
+            );
+<span class="fc" id="L100">            return ResponseEntity.ok()</span>
+<span class="fc" id="L101">                    .contentType(MediaType.APPLICATION_JSON)</span>
+<span class="fc" id="L102">                    .body(response);</span>
+        }
+
+<span class="fc" id="L105">        String notFound = &quot;{&quot;</span>
+                + JSON_QUOTE + JSON_FIELD_CODE + JSON_SEPARATOR + ERROR_CODE_NOT_FOUND + &quot;\&quot;,&quot;
+                + JSON_QUOTE + JSON_FIELD_REASON + JSON_SEPARATOR + ERROR_REASON_NOT_FOUND + JSON_QUOTE
+                + &quot;}&quot;;
+
+<span class="fc" id="L110">        return ResponseEntity.status(404)</span>
+<span class="fc" id="L111">                .contentType(MediaType.APPLICATION_JSON)</span>
+<span class="fc" id="L112">                .body(notFound);</span>
+    }
+
+    // ======================
+    //  Endpoint de Token (ESTRUCTURA paymentMethod)
+    // ======================
+
+    @PostMapping(
+            path = &quot;/token&quot;,
+            consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE
+    )
+    public ResponseEntity&lt;Object&gt; getToken(@RequestBody TokenRequestPlaceholder tokenRequest) {
+<span class="fc" id="L125">        long start = System.currentTimeMillis();</span>
+<span class="fc" id="L126">        String sanitizedRequest = sanitizeForLog(String.valueOf(tokenRequest));</span>
+<span class="fc" id="L127">        log.info(&quot;[TMF676] POST /paymentManagement/v5/token - requestBody={}&quot;, sanitizedRequest);</span>
+
+        try {
+<span class="fc" id="L130">            TokenRequestContext.set(tokenRequest);</span>
+
+<span class="fc" id="L132">            PaymentsPortalConnectorClient.TokenConnectorResponse connectorResponse =</span>
+<span class="fc" id="L133">                    connectorClient.fetchTokenResponse();</span>
+
+            // ESTRUCTURA IDÉNTICA a paymentMethod
+<span class="fc" id="L136">            TokenTmfResponse tmfResponse = new TokenTmfResponse();</span>
+<span class="fc" id="L137">            String tokenId = &quot;token_&quot; + UUID.randomUUID();</span>
+            
+<span class="fc" id="L139">            tmfResponse.setId(tokenId);</span>
+<span class="fc" id="L140">            tmfResponse.setHref(&quot;/paymentManagement/v5/token/&quot; + tokenId);</span>
+<span class="fc" id="L141">            tmfResponse.setStatus(&quot;Active&quot;);</span>
+<span class="fc" id="L142">            tmfResponse.setStatusDate(OffsetDateTime.now().toString());</span>
+            
+            // paymentMethod con misma estructura
+<span class="fc" id="L145">            TokenTmfResponse.PaymentMethod paymentMethod = new TokenTmfResponse.PaymentMethod();</span>
+<span class="fc" id="L146">            paymentMethod.setId(&quot;pm_&quot; + UUID.randomUUID());</span>
+<span class="fc" id="L147">            paymentMethod.setType(&quot;AccessToken&quot;);</span>
+            
+            // Token anidado igual que en el ejemplo
+<span class="fc" id="L150">            TokenTmfResponse.PaymentMethod.TokenDetail tokenDetail = </span>
+                new TokenTmfResponse.PaymentMethod.TokenDetail();
+<span class="fc" id="L152">            tokenDetail.setExternalTokenId(connectorResponse.token()); // JWT aquí</span>
+<span class="fc" id="L153">            tokenDetail.setProvider(&quot;PaymentsPortal&quot;);</span>
+            
+<span class="fc" id="L155">            paymentMethod.setToken(tokenDetail);</span>
+<span class="fc" id="L156">            tmfResponse.setPaymentMethod(paymentMethod);</span>
+
+<span class="fc" id="L158">            long elapsed = System.currentTimeMillis() - start;</span>
+<span class="fc" id="L159">            log.info(&quot;[TMF676] Token con estructura paymentMethod generado en {} ms&quot;, elapsed);</span>
+
+<span class="fc" id="L161">            return ResponseEntity.ok(tmfResponse);</span>
+            
+<span class="fc" id="L163">        } catch (Exception ex) {</span>
+<span class="fc" id="L164">            long elapsed = System.currentTimeMillis() - start;</span>
+<span class="fc" id="L165">            log.error(&quot;[TMF676] Error obteniendo token en {} ms&quot;, elapsed, ex);</span>
+
+<span class="fc" id="L167">            Map&lt;String, Object&gt; errorBody = new HashMap&lt;&gt;();</span>
+<span class="fc" id="L168">            errorBody.put(JSON_FIELD_CODE, ERROR_CODE_BAD_GATEWAY);</span>
+<span class="fc" id="L169">            errorBody.put(JSON_FIELD_REASON, ERROR_REASON_UPSTREAM);</span>
+<span class="fc" id="L170">            errorBody.put(JSON_FIELD_MESSAGE, ex.getMessage());</span>
+
+<span class="fc" id="L172">            return ResponseEntity.status(502).body(errorBody);</span>
+        } finally {
+<span class="fc" id="L174">            TokenRequestContext.clear();</span>
+        }
+    }
+
+    /**
+     * Sanitizes input string to prevent log injection attacks.
+     * Removes newlines and carriage returns that could be used for log forging.
+     */
+    private String sanitizeForLog(String input) {
+<span class="fc bfc" id="L183" title="All 2 branches covered.">        if (input == null) {</span>
+<span class="fc" id="L184">            return null;</span>
+        }
+<span class="fc" id="L186">        return input.replaceAll(&quot;[\n\r]&quot;, &quot;_&quot;);</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.13.202504020838</span></div></body></html>

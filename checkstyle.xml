@@ -1,0 +1,79 @@
+<?xml version="1.0"?>
+<!DOCTYPE module PUBLIC
+    "-//Checkstyle//DTD Checkstyle Configuration 1.3//EN"
+    "https://checkstyle.org/dtds/configuration_1_3.dtd">
+
+<module name="Checker">
+    <property name="charset" value="UTF-8"/>
+    <property name="severity" value="warning"/>
+    <property name="fileExtensions" value="java"/>
+
+    <!-- Excluir archivos generados -->
+    <module name="BeforeExecutionExclusionFileFilter">
+        <property name="fileNamePattern" value="module\-info\.java$"/>
+    </module>
+
+    <!-- Verificar que no haya tabs -->
+    <module name="FileTabCharacter">
+        <property name="eachLine" value="true"/>
+    </module>
+
+    <module name="TreeWalker">
+        <!-- Imports -->
+        <module name="AvoidStarImport"/>
+        <module name="UnusedImports"/>
+        <module name="RedundantImport"/>
+
+        <!-- Nomenclatura -->
+        <module name="PackageName">
+            <property name="format" value="^[a-z]+(\.[a-z][a-z0-9]*)*$"/>
+        </module>
+        <module name="TypeName"/>
+        <module name="MethodName"/>
+        <module name="ConstantName"/>
+        <module name="LocalVariableName"/>
+        <module name="MemberName"/>
+        <module name="ParameterName"/>
+
+        <!-- Tamaño de métodos -->
+        <module name="MethodLength">
+            <property name="max" value="150"/>
+            <property name="tokens" value="METHOD_DEF"/>
+        </module>
+
+        <!-- Complejidad ciclomática -->
+        <module name="CyclomaticComplexity">
+            <property name="max" value="15"/>
+        </module>
+
+        <!-- Espacios en blanco -->
+        <module name="WhitespaceAround"/>
+        <module name="NoWhitespaceAfter"/>
+        <module name="NoWhitespaceBefore"/>
+
+        <!-- Llaves -->
+        <module name="LeftCurly"/>
+        <module name="RightCurly"/>
+        <module name="NeedBraces"/>
+
+        <!-- Prácticas de codificación -->
+        <module name="EqualsHashCode"/>
+        <module name="SimplifyBooleanExpression"/>
+        <module name="SimplifyBooleanReturn"/>
+        <module name="StringLiteralEquality"/>
+        <module name="IllegalCatch">
+            <property name="illegalClassNames" value="java.lang.Exception, java.lang.Throwable, java.lang.RuntimeException"/>
+        </module>
+
+        <!-- Javadoc (relajado) -->
+        <module name="MissingJavadocMethod">
+            <property name="scope" value="public"/>
+            <property name="allowMissingPropertyJavadoc" value="true"/>
+            <property name="tokens" value="METHOD_DEF"/>
+        </module>
+
+        <!-- Modificadores -->
+        <module name="ModifierOrder"/>
+        <module name="RedundantModifier"/>
+    </module>
+</module>

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<FindBugsFilter>
+    <!-- Excluir clases generadas -->
+    <Match>
+        <Package name="~.*\.target\..*"/>
+    </Match>
+
+    <!-- Excluir tests -->
+    <Match>
+        <Class name="~.*Test$"/>
+    </Match>
+
+    <!-- Excluir DTOs/Models (POJOs simples) -->
+    <Match>
+        <Or>
+            <Package name="~.*\.model\..*"/>
+            <Package name="~.*\.dto\..*"/>
+            <Package name="~.*\.entity\..*"/>
+        </Or>
+    </Match>
+
+    <!-- Excluir configuraciones de Spring -->
+    <Match>
+        <Class name="~.*Config$"/>
+    </Match>
+
+    <!-- Permitir serialización sin serialVersionUID en DTOs -->
+    <Match>
+        <Package name="~.*\.model\..*"/>
+        <Bug pattern="SE_NO_SERIALVERSIONID"/>
+    </Match>
+
+    <!-- Permitir campos públicos en DTOs (anotados con @Data) -->
+    <Match>
+        <Package name="~.*\.model\..*"/>
+        <Bug pattern="URF_UNREAD_PUBLIC_OR_PROTECTED_FIELD"/>
+    </Match>
+</FindBugsFilter>

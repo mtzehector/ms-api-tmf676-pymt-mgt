@@ -1,10 +1,10 @@
 package mx.att.digital.api.controllers;
 
+import mx.att.digital.api.error.exception.ValidationResponseException;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import mx.att.digital.api.error.exception.ValidationResponseException;
 
 @RestController
 @RequestMapping(path = "/__test__/throw", produces = MediaType.APPLICATION_JSON_VALUE)

@@ -1,11 +1,11 @@
 package mx.att.digital.api.services;
 
-import static org.junit.jupiter.api.Assertions.*;
-
-import org.junit.jupiter.api.Test;
-
 import mx.att.digital.api.models.AgreementDomain;
 import mx.att.digital.api.models.enums.ResultCode;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 class AgreementServiceUseCaseTest {
 

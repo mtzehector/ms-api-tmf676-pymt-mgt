@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>LoggingAspect.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">logging-core</a> &gt; <a href="index.source.html" class="el_package">mx.att.digital.api.logging</a> &gt; <span class="el_source">LoggingAspect.java</span></div><h1>LoggingAspect.java</h1><pre class="source lang-java linenums">package mx.att.digital.api.logging;
+
+import org.aspectj.lang.ProceedingJoinPoint;
+import org.aspectj.lang.annotation.Around;
+import org.aspectj.lang.annotation.Aspect;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
+
+import java.util.Arrays;
+
+/**
+ * The Class LoggingAspect.
+ */
+@Aspect
+@Component
+<span class="fc" id="L17">public class LoggingAspect {</span>
+
+<span class="fc" id="L19">    private static final Logger log = LoggerFactory.getLogger(LoggingAspect.class);</span>
+    // Uso de ThreadLocal para evitar condiciones de carrera y manejar el estado por hilo
+<span class="fc" id="L21">    private static final ThreadLocal&lt;Boolean&gt; isSanitizing = ThreadLocal.withInitial(() -&gt; false);</span>
+
+    /**
+     * Logs the method execution details for methods within classes annotated
+     * with @RestController.
+     *
+     * @param jp the join point representing the method execution
+     * @return the result of the method execution
+     * @throws Throwable if any error occurs during method execution
+     */
+    @Around(&quot;within(@org.springframework.web.bind.annotation.RestController *)&quot;)
+    public Object logController(ProceedingJoinPoint jp) throws Throwable {
+<span class="fc bfc" id="L33" title="All 2 branches covered.">        if (Boolean.TRUE.equals(isSanitizing.get())) {</span>
+<span class="fc" id="L34">            return jp.proceed();</span>
+        }
+
+<span class="fc" id="L37">        isSanitizing.set(true);</span>
+        try {
+<span class="fc" id="L39">            String rawMethod = jp.getSignature().toShortString();</span>
+<span class="fc" id="L40">            String method = LogSanitizer.sanitize(rawMethod);</span>
+
+<span class="fc" id="L42">            Object[] args = jp.getArgs();</span>
+<span class="fc" id="L43">            Object[] sanitizedArgs = Arrays.stream(args).map(LogSanitizer::sanitizeObject).toArray();</span>
+
+<span class="fc" id="L45">            long start = System.currentTimeMillis();</span>
+<span class="fc" id="L46">            log.info(&quot;Start {} with args {}&quot;, method, sanitizedArgs);</span>
+
+<span class="fc" id="L48">            Object result = jp.proceed();</span>
+
+<span class="fc" id="L50">            Object sanitizedResult = LogSanitizer.sanitizeObject(result);</span>
+<span class="fc" id="L51">            log.info(&quot;End {} took {} ms, result: {}&quot;, method, (System.currentTimeMillis() - start), sanitizedResult);</span>
+
+<span class="fc" id="L53">            return result;</span>
+        } finally {
+<span class="fc" id="L55">            isSanitizing.remove();</span>
+        }
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.13.202504020838</span></div></body></html>

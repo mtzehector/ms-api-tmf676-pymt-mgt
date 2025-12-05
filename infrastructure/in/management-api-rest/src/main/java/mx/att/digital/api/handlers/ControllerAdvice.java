@@ -24,6 +24,12 @@ import java.util.Map;
 @AllArgsConstructor
 public class ControllerAdvice {
 
+	private static final String ERROR_CODE_VALIDATION = "30";
+	private static final String ERROR_REASON_INVALID_FORMAT = "Formato Invalido";
+	private static final String FIELD_CODE = "code";
+	private static final String FIELD_REASON = "reason";
+	private static final String FIELD_DETAILS = "details";
+
 	/**
 	 * Handle connection error exception.
 	 *
@@ -33,6 +39,10 @@ public class ControllerAdvice {
 	@ExceptionHandler({ BalancePlatformConnectionErrorException.class })
 	public ResponseEntity<ErrorResponse> handleConnectionErrorException(
 			BalancePlatformConnectionErrorException balancePlatformConnectionErrorException) {
+		log.error("Balance platform connection error: code={}, reason={}", 
+				balancePlatformConnectionErrorException.getCode(),
+				balancePlatformConnectionErrorException.getReason(), 
+				balancePlatformConnectionErrorException);
 		ErrorResponse errorResponse = ErrorResponse.builder()
 				.message(balancePlatformConnectionErrorException.getMessage())
 				.reason(balancePlatformConnectionErrorException.getReason())
@@ -48,6 +58,10 @@ public class ControllerAdvice {
 	 */
 	@ExceptionHandler({ ExternalSystemError.class })
 	public ResponseEntity<ErrorResponse> handleExternalSystemError(ExternalSystemError externalSystemError) {
+		log.error("External system error: code={}, reason={}", 
+				externalSystemError.getCode(),
+				externalSystemError.getReason(), 
+				externalSystemError);
 		ErrorResponse errorResponse = ErrorResponse.builder().message(externalSystemError.getMessage())
 				.reason(externalSystemError.getReason()).code(externalSystemError.getCode()).build();
 		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
@@ -62,15 +76,16 @@ public class ControllerAdvice {
 	// Maneja errores de validación de @Valid en @RequestBody
 	@ExceptionHandler(MethodArgumentNotValidException.class)
 	public ResponseEntity<Map<String, Object>> handleValidationExceptions(MethodArgumentNotValidException ex) {
+		log.warn("Validation failed: {}", ex.getBindingResult().getFieldErrors());
 		Map<String, Object> errors = new HashMap<>();
-		errors.put("code", "30");
-		errors.put("reason", "Formato Invalido");
+		errors.put(FIELD_CODE, ERROR_CODE_VALIDATION);
+		errors.put(FIELD_REASON, ERROR_REASON_INVALID_FORMAT);
 
 		Map<String, String> fieldErrors = new HashMap<>();
 		for (FieldError error : ex.getBindingResult().getFieldErrors()) {
 			fieldErrors.put(error.getField(), error.getDefaultMessage());
 		}
-		errors.put("details", fieldErrors);
+		errors.put(FIELD_DETAILS, fieldErrors);
 
 		return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
 	}
@@ -83,10 +98,11 @@ public class ControllerAdvice {
 	 */
 	@ExceptionHandler(ValidationResponseException.class)
 	public ResponseEntity<Map<String, Object>> handleValidationException(ValidationResponseException ex) {
+		log.warn("Validation response exception: code={}, reason={}", ex.getCode(), ex.getReason(), ex);
 		Map<String, Object> error = new HashMap<>();
-		error.put("code", ex.getCode());
-		error.put("reason", ex.getReason());
-		error.put("details", ex.getDetails());
+		error.put(FIELD_CODE, ex.getCode());
+		error.put(FIELD_REASON, ex.getReason());
+		error.put(FIELD_DETAILS, ex.getDetails());
 
 		return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
 	}

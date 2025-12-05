@@ -35,14 +35,14 @@ public class DomainExceptionHandler {
 	// Maneja errores de validación de @Valid en @RequestBody
 	@ExceptionHandler(MethodArgumentNotValidException.class)
 	public ResponseEntity<Map<String, Object>> handleValidationExceptions(MethodArgumentNotValidException ex) {
-		Map<String, Object> errors = new HashMap<>();
-		errors.put("code", "30");
-		errors.put(REASON, "Formato Invalido");
-
 		Map<String, String> fieldErrors = new HashMap<>();
 		for (FieldError error : ex.getBindingResult().getFieldErrors()) {
 			fieldErrors.put(error.getField(), error.getDefaultMessage());
 		}
+		
+		Map<String, Object> errors = new HashMap<>();
+		errors.put(CODE, "30");
+		errors.put(REASON, "Formato Invalido");
 		errors.put(DETAILS, fieldErrors);
 
 		return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
@@ -73,6 +73,10 @@ public class DomainExceptionHandler {
 	// Maneja otras excepciones no controladas
 	@ExceptionHandler(Exception.class)
 	public ResponseEntity<Map<String, Object>> handleAllExceptions(Exception ex) {
+		// Log at ERROR level for unexpected exceptions
+		org.slf4j.LoggerFactory.getLogger(DomainExceptionHandler.class)
+			.error("Unexpected error occurred", ex);
+			
 		Map<String, Object> error = new HashMap<>();
 		error.put(CODE, "500");
 		error.put(REASON, "Error interno del servidor");

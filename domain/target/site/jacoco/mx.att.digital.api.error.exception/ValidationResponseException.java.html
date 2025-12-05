@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ValidationResponseException.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">management-domain</a> &gt; <a href="index.source.html" class="el_package">mx.att.digital.api.error.exception</a> &gt; <span class="el_source">ValidationResponseException.java</span></div><h1>ValidationResponseException.java</h1><pre class="source lang-java linenums">package mx.att.digital.api.error.exception;
+
+import lombok.Getter;
+
+
+/**
+ * The Class ValidationResponseException.
+ */
+@Getter
+public class ValidationResponseException extends RuntimeException {
+
+	/** Serial version UID. */
+	private static final long serialVersionUID = 1L;
+	
+	/** The code. */
+	private final String code;
+	
+	/** The reason. */
+	private final String reason;
+	
+	/** The details. */
+	private final String details;
+
+	/**
+	 * Instantiates a new validation response exception type NullPointerException.
+	 *
+	 * @param code the code
+	 * @param reason the reason
+	 * @param details the details
+	 * @param cause the underlying exception/NullPointerException that triggered this validation error; 
+	 * used to preserve
+	 *                the original stack trace for better error tracking
+	 */
+	public ValidationResponseException(String code, String reason, String details, 
+			NullPointerException cause) {
+<span class="nc" id="L36">		super(reason, cause); // Llamada explícita al constructor de RuntimeException con el mensaje</span>
+<span class="nc" id="L37">		this.code = code;</span>
+<span class="nc" id="L38">		this.reason = reason;</span>
+<span class="nc" id="L39">		this.details = details;</span>
+<span class="nc" id="L40">	}</span>
+
+	/**
+	 * Constructs a new ValidationResponseException type ReflectiveOperationException 
+	 * with the specified code, reason, details, and cause.
+	 * 
+	 * @param code    the error code representing the specific validation error
+	 * @param reason  a brief explanation of the validation failure
+	 * @param details additional context or information about the error
+	 * @param cause   the underlying exception/ReflectiveOperationException that triggered 
+	 * this validation error; used to preserve
+	 *                the original stack trace for better error tracking
+	 */
+	public ValidationResponseException(String code, String reason, 
+			String details, ReflectiveOperationException cause) {
+<span class="nc" id="L55">		super(reason, cause); // Llamada explícita al constructor de RuntimeException con el mensaje</span>
+<span class="nc" id="L56">		this.code = code;</span>
+<span class="nc" id="L57">		this.reason = reason;</span>
+<span class="nc" id="L58">		this.details = details;</span>
+<span class="nc" id="L59">	}</span>
+
+	/**
+	 * Instantiates a new validation response exception simple.
+	 *
+	 * @param code the code
+	 * @param reason the reason
+	 * @param details the details
+	 */
+	public ValidationResponseException(String code, String reason, 
+			String details) {
+<span class="fc" id="L70">		super(reason); // Llamada explícita al constructor de RuntimeException con el mensaje</span>
+<span class="fc" id="L71">		this.code = code;</span>
+<span class="fc" id="L72">		this.reason = reason;</span>
+<span class="fc" id="L73">		this.details = details;</span>
+<span class="fc" id="L74">	}</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.13.202504020838</span></div></body></html>

@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>RestTemplateConfig676.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">management-api-rest</a> &gt; <a href="index.source.html" class="el_package">mx.att.digital.api.config</a> &gt; <span class="el_source">RestTemplateConfig676.java</span></div><h1>RestTemplateConfig676.java</h1><pre class="source lang-java linenums">package mx.att.digital.api.config;
+
+import org.apache.hc.client5.http.classic.HttpClient;
+import org.apache.hc.client5.http.impl.classic.HttpClients;
+import org.apache.hc.client5.http.impl.io.PoolingHttpClientConnectionManager;
+import org.apache.hc.client5.http.impl.io.PoolingHttpClientConnectionManagerBuilder;
+import org.apache.hc.client5.http.ssl.DefaultClientTlsStrategy;
+import org.apache.hc.core5.ssl.SSLContextBuilder;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.core.io.Resource;
+import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
+import org.springframework.web.client.RestTemplate;
+
+import javax.net.ssl.SSLContext;
+
+/**
+ * RestTemplate SSL Config para TMF676 (Payment connector).
+ */
+@Configuration
+<span class="fc" id="L22">public class RestTemplateConfig676 {</span>
+
+    @Value(&quot;${tmf676.ssl.trust-store}&quot;)
+    private Resource trustStore;
+
+    @Value(&quot;${tmf676.ssl.trust-store-password}&quot;)
+    private String trustStorePassword;
+
+    @Bean(name = &quot;restTemplate676&quot;)
+    public RestTemplate restTemplate676() {
+        try {
+
+<span class="fc" id="L34">            SSLContext sslContext = SSLContextBuilder.create()</span>
+<span class="nc" id="L35">                .loadTrustMaterial(</span>
+<span class="nc" id="L36">                    trustStore.getURL(),</span>
+<span class="nc" id="L37">                    trustStorePassword.toCharArray()</span>
+                )
+<span class="nc" id="L39">                .build();</span>
+
+<span class="nc" id="L41">            PoolingHttpClientConnectionManager connectionManager = PoolingHttpClientConnectionManagerBuilder.create()</span>
+<span class="nc" id="L42">                    .setTlsSocketStrategy(new DefaultClientTlsStrategy(sslContext))</span>
+<span class="nc" id="L43">                    .build();</span>
+            
+<span class="nc" id="L45">            connectionManager.setMaxTotal(100);</span>
+<span class="nc" id="L46">            connectionManager.setDefaultMaxPerRoute(10);</span>
+
+<span class="nc" id="L48">            HttpClient httpClient = HttpClients.custom()</span>
+<span class="nc" id="L49">                .setConnectionManager(connectionManager)</span>
+<span class="nc" id="L50">                .build();</span>
+
+<span class="nc" id="L52">            HttpComponentsClientHttpRequestFactory requestFactory =</span>
+                new HttpComponentsClientHttpRequestFactory(httpClient);
+
+<span class="nc" id="L55">            return new RestTemplate(requestFactory);</span>
+
+<span class="fc" id="L57">        } catch (Exception ex) {</span>
+<span class="fc" id="L58">            throw new IllegalStateException(&quot;Error configurando SSL para TMF676&quot;, ex);</span>
+        }
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.13.202504020838</span></div></body></html>

@@ -1,34 +1,33 @@
 package mx.att.digital.api.logging;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.lang.reflect.Field;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Set;
+import java.util.Map.Entry;
 import java.util.stream.Collectors;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * The Class LogSanitizer.
  */
 public class LogSanitizer {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(LogSanitizer.class);
+
     /** The Constant VALID_EXTRA_CHARS. */
     private static final Set<Character> VALID_EXTRA_CHARS = Set.of(
             '\\', '/', '.', '-', '_', ' ', '=', ':', '#', '\n', ')', '('
     );
-    
+
     /** The Constant SENSITIVE_FIELDS. */
     private static final Set<String> SENSITIVE_FIELDS = Set.of(
     		"sensitiveData"
     );
-
-    /** Set to track processed objects and avoid circular references. */
-    private static final Set<Object> processedObjects = new HashSet<>();
 
     /**
      * Instantiates a new log sanitizer.
@@ -94,6 +93,17 @@ public class LogSanitizer {
      * @return the object
      */
     public static Object sanitizeObject(Object obj) {
+        return sanitizeObject(obj, new HashSet<>());
+    }
+
+    /**
+     * Sanitize object with circular reference tracking.
+     *
+     * @param obj the obj
+     * @param processedObjects set to track processed objects
+     * @return the sanitized object
+     */
+    private static Object sanitizeObject(Object obj, Set<Object> processedObjects) {
         if (obj == null) return null;
 
         // If the object has already been processed, return it to avoid circular references
@@ -112,8 +122,8 @@ public class LogSanitizer {
         // Handle collections
         if (obj instanceof Collection<?>) {
             return ((Collection<?>) obj).stream()
-                    .map(LogSanitizer::sanitizeObject)
-                    .collect(Collectors.toList());
+                    .map(item -> sanitizeObject(item, processedObjects))
+                    .toList();
         }
 
         // Handle maps
@@ -121,26 +131,25 @@ public class LogSanitizer {
             return ((Map<?, ?>) obj).entrySet().stream()
                     .collect(Collectors.toMap(
                             Entry::getKey,
-                            e -> sanitizeObject(e.getValue())
+                            e -> sanitizeObject(e.getValue(), processedObjects)
                     ));
         }
 
-        // Handle complex objects (POJOs)
-        Logger log = LoggerFactory.getLogger(LogSanitizer.class);
+        // Handle complex objects (POJOs) - only public fields
         Map<String, Object> sanitized = new HashMap<>();
-        for (Field field : obj.getClass().getDeclaredFields()) {
-            //Public complex objects field.setAccessible(false);
+        for (Field field : obj.getClass().getFields()) {
             Object value = null;
             try {
                 value = field.get(obj);
-            } catch (IllegalAccessException ignored) {
-				log.warn("Failed to access field: {}", field.getName(), ignored);
+            } catch (IllegalAccessException ex) {
+                LOGGER.warn("Failed to access field: {}", field.getName(), ex);
+                continue;
             }
 
             if (SENSITIVE_FIELDS.contains(field.getName())) {
                 sanitized.put(field.getName(), "***");
             } else {
-                sanitized.put(field.getName(), sanitizeObject(value));
+                sanitized.put(field.getName(), sanitizeObject(value, processedObjects));
             }
         }
         return sanitized;

@@ -1,0 +1,14 @@
+D:\GIT\CONECTANDO\2025Dic04\ms-api-tmf676-pymt-mgt\infrastructure\in\management-api-rest\src\main\java\mx\att\digital\api\config\ApiPathRewriteFilterConfig.java
+D:\GIT\CONECTANDO\2025Dic04\ms-api-tmf676-pymt-mgt\infrastructure\in\management-api-rest\src\main\java\mx\att\digital\api\config\JacksonConfig.java
+D:\GIT\CONECTANDO\2025Dic04\ms-api-tmf676-pymt-mgt\infrastructure\in\management-api-rest\src\main\java\mx\att\digital\api\config\RestTemplateConfig676.java
+D:\GIT\CONECTANDO\2025Dic04\ms-api-tmf676-pymt-mgt\infrastructure\in\management-api-rest\src\main\java\mx\att\digital\api\connectors\paymentsportal\PaymentsPortalConnectorClient.java
+D:\GIT\CONECTANDO\2025Dic04\ms-api-tmf676-pymt-mgt\infrastructure\in\management-api-rest\src\main\java\mx\att\digital\api\connectors\paymentsportal\TokenRequestContext.java
+D:\GIT\CONECTANDO\2025Dic04\ms-api-tmf676-pymt-mgt\infrastructure\in\management-api-rest\src\main\java\mx\att\digital\api\connectors\paymentsportal\TokenRequestPlaceholder.java
+D:\GIT\CONECTANDO\2025Dic04\ms-api-tmf676-pymt-mgt\infrastructure\in\management-api-rest\src\main\java\mx\att\digital\api\controllers\PaymentController.java
+D:\GIT\CONECTANDO\2025Dic04\ms-api-tmf676-pymt-mgt\infrastructure\in\management-api-rest\src\main\java\mx\att\digital\api\handlers\ControllerAdvice.java
+D:\GIT\CONECTANDO\2025Dic04\ms-api-tmf676-pymt-mgt\infrastructure\in\management-api-rest\src\main\java\mx\att\digital\api\mappers\AgreementMapper.java
+D:\GIT\CONECTANDO\2025Dic04\ms-api-tmf676-pymt-mgt\infrastructure\in\management-api-rest\src\main\java\mx\att\digital\api\mappers\TimePeriodMapper.java
+D:\GIT\CONECTANDO\2025Dic04\ms-api-tmf676-pymt-mgt\infrastructure\in\management-api-rest\src\main\java\mx\att\digital\api\model\PaymentTokenResponse.java
+D:\GIT\CONECTANDO\2025Dic04\ms-api-tmf676-pymt-mgt\infrastructure\in\management-api-rest\src\main\java\mx\att\digital\api\model\TokenShortResponse.java
+D:\GIT\CONECTANDO\2025Dic04\ms-api-tmf676-pymt-mgt\infrastructure\in\management-api-rest\src\main\java\mx\att\digital\api\model\TokenTmfResponse.java
+D:\GIT\CONECTANDO\2025Dic04\ms-api-tmf676-pymt-mgt\infrastructure\in\management-api-rest\src\main\java\mx\att\digital\api\util\exception\FieldFilteringException.java

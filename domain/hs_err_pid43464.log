@@ -1,0 +1,246 @@
+#
+# There is insufficient memory for the Java Runtime Environment to continue.
+# Native memory allocation (mmap) failed to map 257949696 bytes. Error detail: G1 virtual space
+# Possible reasons:
+#   The system is out of physical RAM or swap space
+#   This process is running with CompressedOops enabled, and the Java Heap may be blocking the growth of the native heap
+# Possible solutions:
+#   Reduce memory load on the system
+#   Increase physical memory or swap space
+#   Check if swap backing store is full
+#   Decrease Java heap size (-Xmx/-Xms)
+#   Decrease number of Java threads
+#   Decrease Java thread stack sizes (-Xss)
+#   Set larger code cache with -XX:ReservedCodeCacheSize=
+#   JVM is running with Zero Based Compressed Oops mode in which the Java heap is
+#     placed in the first 32GB address space. The Java Heap base address is the
+#     maximum limit for the native heap growth. Please use -XX:HeapBaseMinAddress
+#     to set the Java Heap base and to place the Java Heap above 32GB virtual address.
+# This output file may be truncated or incomplete.
+#
+#  Out of Memory Error (os_windows.cpp:3713), pid=43464, tid=41968
+#
+# JRE version:  (21.0.8+12) (build )
+# Java VM: OpenJDK 64-Bit Server VM (21.0.8+12-LTS, mixed mode, sharing, tiered, compressed oops, compressed class ptrs, g1 gc, windows-amd64)
+# No core dump will be written. Minidumps are not enabled by default on client versions of Windows
+#
+
+---------------  S U M M A R Y ------------
+
+Command Line: -Dnet.bytebuddy.agent.attacher.dump= net.bytebuddy.agent.Attacher com.sun.tools.attach.VirtualMachine 45656 C:\Users\hecto\.m2\repository\net\bytebuddy\byte-buddy-agent\1.17.6\byte-buddy-agent-1.17.6.jar false 
+
+Host: AMD Ryzen 7 5700G with Radeon Graphics         , 16 cores, 15G,  Windows 11 , 64 bit Build 26100 (10.0.26100.7309)
+Time: Fri Dec  5 10:52:34 2025 Hora estándar central (México) elapsed time: 2.031329 seconds (0d 0h 0m 2s)
+
+---------------  T H R E A D  ---------------
+
+Current thread (0x000001f5913c4fc0):  JavaThread "Unknown thread" [_thread_in_vm, id=41968, stack(0x000000c3d5600000,0x000000c3d5700000) (1024K)]
+
+Stack: [0x000000c3d5600000,0x000000c3d5700000]
+Native frames: (J=compiled Java code, j=interpreted, Vv=VM code, C=native code)
+V  [jvm.dll+0x6d9b09]
+V  [jvm.dll+0x8b6fc1]
+V  [jvm.dll+0x8b937e]
+V  [jvm.dll+0x8b9a63]
+V  [jvm.dll+0x285546]
+V  [jvm.dll+0x6d6235]
+V  [jvm.dll+0x6c9f5a]
+V  [jvm.dll+0x35e47a]
+V  [jvm.dll+0x366076]
+V  [jvm.dll+0x3b7d1e]
+V  [jvm.dll+0x3b7fc8]
+V  [jvm.dll+0x331eac]
+V  [jvm.dll+0x332a3b]
+V  [jvm.dll+0x87f529]
+V  [jvm.dll+0x3c4e71]
+V  [jvm.dll+0x8685b3]
+V  [jvm.dll+0x45941e]
+V  [jvm.dll+0x45b0a1]
+C  [jli.dll+0x52a3]
+C  [ucrtbase.dll+0x37b0]
+C  [KERNEL32.DLL+0x2e8d7]
+C  [ntdll.dll+0x8c53c]
+
+
+---------------  P R O C E S S  ---------------
+
+Threads class SMR info:
+_java_thread_list=0x00007ffab0f5bd20, length=0, elements={
+}
+
+Java Threads: ( => current thread )
+Total: 0
+
+Other Threads:
+  0x000001f5938428c0 WorkerThread "GC Thread#0"                     [id=43472, stack(0x000000c3d5700000,0x000000c3d5800000) (1024K)]
+  0x000001f593853d30 ConcurrentGCThread "G1 Main Marker"            [id=47976, stack(0x000000c3d5800000,0x000000c3d5900000) (1024K)]
+  0x000001f5938572e0 WorkerThread "G1 Conc#0"                       [id=45744, stack(0x000000c3d5900000,0x000000c3d5a00000) (1024K)]
+
+[error occurred during error reporting (printing all threads), id 0xc0000005, EXCEPTION_ACCESS_VIOLATION (0xc0000005) at pc=0x00007ffab0644e67]
+VM state: not at safepoint (not fully initialized)
+
+VM Mutex/Monitor currently owned by a thread:  ([mutex/lock_event])
+[0x00007ffab0fd1638] Heap_lock - owner thread: 0x000001f5913c4fc0
+
+Heap address: 0x000000070a000000, size: 3936 MB, Compressed Oops mode: Zero based, Oop shift amount: 3
+
+CDS archive(s) mapped at: [0x0000000000000000-0x0000000000000000-0x0000000000000000), size 0, SharedBaseAddress: 0x0000000800000000, ArchiveRelocationMode: 1.
+Narrow klass base: 0x0000000000000000, Narrow klass shift: 0, Narrow klass range: 0x0
+
+GC Precious Log:
+ CardTable entry size: 512
+ Card Set container configuration: InlinePtr #cards 4 size 8 Array Of Cards #cards 16 size 48 Howl #buckets 8 coarsen threshold 3686 Howl Bitmap #cards 512 size 80 coarsen threshold 460 Card regions per heap region 1 cards per card region 4096
+
+Heap:
+ garbage-first heap   total 0K, used 0K [0x000000070a000000, 0x0000000800000000)
+  region size 2048K, 0 young (0K), 0 survivors (0K)
+
+[error occurred during error reporting (printing heap information), id 0xc0000005, EXCEPTION_ACCESS_VIOLATION (0xc0000005) at pc=0x00007ffab0a33159]
+GC Heap History (0 events):
+No events
+
+Dll operation events (1 events):
+Event: 0.007 Loaded shared library C:\Program Files\BellSoft\LibericaJDK-21\bin\java.dll
+
+Deoptimization events (0 events):
+No events
+
+Classes loaded (0 events):
+No events
+
+Classes unloaded (0 events):
+No events
+
+Classes redefined (0 events):
+No events
+
+Internal exceptions (0 events):
+No events
+
+ZGC Phase Switch (0 events):
+No events
+
+VM Operations (0 events):
+No events
+
+Memory protections (0 events):
+No events
+
+Nmethod flushes (0 events):
+No events
+
+Events (0 events):
+No events
+
+
+Dynamic libraries:
+0x00007ff769b70000 - 0x00007ff769b7e000 	C:\Program Files\BellSoft\LibericaJDK-21\bin\java.exe
+0x00007ffba3300000 - 0x00007ffba3567000 	C:\WINDOWS\SYSTEM32\ntdll.dll
+0x00007ffba2820000 - 0x00007ffba28e9000 	C:\WINDOWS\System32\KERNEL32.DLL
+0x00007ffba0b70000 - 0x00007ffba0f5f000 	C:\WINDOWS\System32\KERNELBASE.dll
+0x00007ffba0800000 - 0x00007ffba094b000 	C:\WINDOWS\System32\ucrtbase.dll
+0x00007ffafbb50000 - 0x00007ffafbb68000 	C:\Program Files\BellSoft\LibericaJDK-21\bin\jli.dll
+0x00007ffb521d0000 - 0x00007ffb521eb000 	C:\Program Files\BellSoft\LibericaJDK-21\bin\VCRUNTIME140.dll
+0x00007ffba25d0000 - 0x00007ffba2795000 	C:\WINDOWS\System32\USER32.dll
+0x00007ffb8eaf0000 - 0x00007ffb8ed83000 	C:\WINDOWS\WinSxS\amd64_microsoft.windows.common-controls_6595b64144ccf1df_6.0.26100.7309_none_3e05feeae336a044\COMCTL32.dll
+0x00007ffba0500000 - 0x00007ffba0527000 	C:\WINDOWS\System32\win32u.dll
+0x00007ffba1210000 - 0x00007ffba12b9000 	C:\WINDOWS\System32\msvcrt.dll
+0x00007ffba3110000 - 0x00007ffba313b000 	C:\WINDOWS\System32\GDI32.dll
+0x00007ffba0f70000 - 0x00007ffba109c000 	C:\WINDOWS\System32\gdi32full.dll
+0x00007ffba0450000 - 0x00007ffba04f3000 	C:\WINDOWS\System32\msvcp_win.dll
+0x00007ffba2e60000 - 0x00007ffba2e91000 	C:\WINDOWS\System32\IMM32.DLL
+0x00007ffb546a0000 - 0x00007ffb546ac000 	C:\Program Files\BellSoft\LibericaJDK-21\bin\vcruntime140_1.dll
+0x00007ffae9a80000 - 0x00007ffae9b0e000 	C:\Program Files\BellSoft\LibericaJDK-21\bin\msvcp140.dll
+0x00007ffab0300000 - 0x00007ffab10b3000 	C:\Program Files\BellSoft\LibericaJDK-21\bin\server\jvm.dll
+0x00007ffba2bb0000 - 0x00007ffba2c64000 	C:\WINDOWS\System32\ADVAPI32.dll
+0x00007ffba2c70000 - 0x00007ffba2d16000 	C:\WINDOWS\System32\sechost.dll
+0x00007ffba1e10000 - 0x00007ffba1f28000 	C:\WINDOWS\System32\RPCRT4.dll
+0x00007ffba27a0000 - 0x00007ffba2814000 	C:\WINDOWS\System32\WS2_32.dll
+0x00007ffba02d0000 - 0x00007ffba032e000 	C:\WINDOWS\SYSTEM32\POWRPROF.dll
+0x00007ffb97e50000 - 0x00007ffb97e85000 	C:\WINDOWS\SYSTEM32\WINMM.dll
+0x00007ffb97e90000 - 0x00007ffb97e9b000 	C:\WINDOWS\SYSTEM32\VERSION.dll
+0x00007ffba02b0000 - 0x00007ffba02c4000 	C:\WINDOWS\SYSTEM32\UMPDC.dll
+0x00007ffb9f120000 - 0x00007ffb9f13b000 	C:\WINDOWS\SYSTEM32\kernel.appcore.dll
+0x00007ffb54540000 - 0x00007ffb5454a000 	C:\Program Files\BellSoft\LibericaJDK-21\bin\jimage.dll
+0x00007ffb97270000 - 0x00007ffb974b2000 	C:\WINDOWS\SYSTEM32\DBGHELP.DLL
+0x00007ffba1a80000 - 0x00007ffba1e06000 	C:\WINDOWS\System32\combase.dll
+0x00007ffba2ad0000 - 0x00007ffba2ba6000 	C:\WINDOWS\System32\OLEAUT32.dll
+0x00007ffb89f40000 - 0x00007ffb89f7c000 	C:\WINDOWS\SYSTEM32\dbgcore.DLL
+0x00007ffba0ac0000 - 0x00007ffba0b65000 	C:\WINDOWS\System32\bcryptPrimitives.dll
+0x00007ffafb060000 - 0x00007ffafb07f000 	C:\Program Files\BellSoft\LibericaJDK-21\bin\java.dll
+
+JVMTI agents: none
+
+dbghelp: loaded successfully - version: 4.0.5 - missing functions: none
+symbol engine: initialized successfully - sym options: 0x614 - pdb path: .;C:\Program Files\BellSoft\LibericaJDK-21\bin;C:\WINDOWS\SYSTEM32;C:\WINDOWS\WinSxS\amd64_microsoft.windows.common-controls_6595b64144ccf1df_6.0.26100.7309_none_3e05feeae336a044;C:\Program Files\BellSoft\LibericaJDK-21\bin\server
+
+VM Arguments:
+jvm_args: -Dnet.bytebuddy.agent.attacher.dump= 
+java_command: net.bytebuddy.agent.Attacher com.sun.tools.attach.VirtualMachine 45656 C:\Users\hecto\.m2\repository\net\bytebuddy\byte-buddy-agent\1.17.6\byte-buddy-agent-1.17.6.jar false 
+java_class_path (initial): C:\Users\hecto\.m2\repository\net\bytebuddy\byte-buddy-agent\1.17.6\byte-buddy-agent-1.17.6.jar
+Launcher Type: SUN_STANDARD
+
+[Global flags]
+     intx CICompilerCount                          = 12                                        {product} {ergonomic}
+     uint ConcGCThreads                            = 3                                         {product} {ergonomic}
+     uint G1ConcRefinementThreads                  = 13                                        {product} {ergonomic}
+   size_t G1HeapRegionSize                         = 2097152                                   {product} {ergonomic}
+    uintx GCDrainStackTargetSize                   = 64                                        {product} {ergonomic}
+   size_t InitialHeapSize                          = 257949696                                 {product} {ergonomic}
+   size_t MarkStackSize                            = 4194304                                   {product} {ergonomic}
+   size_t MaxHeapSize                              = 4127195136                                {product} {ergonomic}
+   size_t MinHeapDeltaBytes                        = 2097152                                   {product} {ergonomic}
+   size_t MinHeapSize                              = 8388608                                   {product} {ergonomic}
+    uintx NonNMethodCodeHeapSize                   = 7602480                                {pd product} {ergonomic}
+    uintx NonProfiledCodeHeapSize                  = 122027880                              {pd product} {ergonomic}
+    uintx ProfiledCodeHeapSize                     = 122027880                              {pd product} {ergonomic}
+    uintx ReservedCodeCacheSize                    = 251658240                              {pd product} {ergonomic}
+     bool SegmentedCodeCache                       = true                                      {product} {ergonomic}
+   size_t SoftMaxHeapSize                          = 4127195136                             {manageable} {ergonomic}
+     bool UseCompressedOops                        = true                           {product lp64_product} {ergonomic}
+     bool UseG1GC                                  = true                                      {product} {ergonomic}
+     bool UseLargePagesIndividualAllocation        = false                                  {pd product} {ergonomic}
+
+Logging:
+Log output configuration:
+ #0: stdout all=warning uptime,level,tags foldmultilines=false
+ #1: stderr all=off uptime,level,tags foldmultilines=false
+
+Environment Variables:
+JAVA_HOME=C:/Program Files/BellSoft/LibericaJDK-21
+PATH=C:\Users\hecto\bin;C:\Program Files\Git\mingw64\bin;C:\Program Files\Git\usr\local\bin;C:\Program Files\Git\usr\bin;C:\Program Files\Git\usr\bin;C:\Program Files\Git\mingw64\bin;C:\Program Files\Git\usr\bin;C:\Users\hecto\bin;C:\Python313\Scripts;C:\Python313;C:\Program Files\BellSoft\LibericaJDK-21\bin;C:\Program Files\BellSoft\LibericaJDK-17\bin;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0;C:\WINDOWS\System32\OpenSSH;C:\Program Files\Docker\Docker\resources\bin;C:\ProgramData\chocolatey\bin;D:\apps\ImageMagick;C:\Program Files\nodejs;C:\Program Files\Git\cmd;C:\apps\apache-maven-3.9.11\bin;C:\Users\hecto\.local\bin;C:\Users\hecto\AppData\Local\Microsoft\WindowsApps;C:\Program Files\JetBrains\IntelliJ IDEA 2025.1.4.1\bin;C:\Users\hecto\.lmstudio\bin;C:\Users\hecto\AppData\Local\Programs\Microsoft VS Code\bin;C:\Users\hecto\AppData\Local\GitHubDesktop\bin;C:\Users\hecto\AppData\Local\Programs\Ollama;C:\Users\hecto\.conda\envs\lmstudio-env;C:\Program Files\Tesseract-OCR;C:\Users\hecto\AppData\Roaming\npm;C:\Users\hecto\AppData\Roaming\npm;C:\Users\hecto\AppData\Local\Programs\Antigravity\bin;C:\Program Files\Git\usr\bin\vendor_perl;C:\Program Files\Git\usr\bin\core_perl
+USERNAME=hecto
+SHELL=C:\Program Files\Git\usr\bin\bash.exe
+DISPLAY=needs-to-be-defined
+LANG=es_ES.UTF-8
+TERM=xterm-256color
+TMPDIR=C:\Users\hecto\AppData\Local\Temp
+OS=Windows_NT
+PROCESSOR_IDENTIFIER=AMD64 Family 25 Model 80 Stepping 0, AuthenticAMD
+TMP=C:\Users\hecto\AppData\Local\Temp
+TEMP=C:\Users\hecto\AppData\Local\Temp
+
+
+
+
+Periodic native trim disabled
+
+---------------  S Y S T E M  ---------------
+
+OS:
+ Windows 11 , 64 bit Build 26100 (10.0.26100.7309)
+OS uptime: 3 days 5:35 hours
+Hyper-V role detected
+
+CPU: total 16 (initial active 16) (16 cores per cpu, 2 threads per core) family 25 model 80 stepping 0 microcode 0xa50000f, cx8, cmov, fxsr, ht, mmx, 3dnowpref, sse, sse2, sse3, ssse3, sse4a, sse4.1, sse4.2, popcnt, lzcnt, tsc, tscinvbit, avx, avx2, aes, erms, clmul, bmi1, bmi2, adx, sha, fma, vzeroupper, clflush, clflushopt, hv, rdtscp, rdpid, fsrm, f16c, cet_ss
+Processor Information for the first 16 processors :
+  Max Mhz: 3801, Current Mhz: 3801, Mhz Limit: 3801
+
+Memory: 4k page, system-wide physical 15741M (1098M free)
+TotalPageFile size 36221M (AvailPageFile size 212M)
+current process WorkingSet (physical memory assigned to process): 12M, peak: 12M
+current process commit charge ("private bytes"): 71M, peak: 317M
+
+vm_info: OpenJDK 64-Bit Server VM (21.0.8+12-LTS) for windows-amd64 JRE (21.0.8+12-LTS), built on 2025-07-08T09:54:18Z by "hudson" with MS VC++ 17.1 (VS2022)
+
+END.

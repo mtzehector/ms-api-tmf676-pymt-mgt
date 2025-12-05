@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ApiPathRewriteFilterConfig.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">management-api-rest</a> &gt; <a href="index.source.html" class="el_package">mx.att.digital.api.config</a> &gt; <span class="el_source">ApiPathRewriteFilterConfig.java</span></div><h1>ApiPathRewriteFilterConfig.java</h1><pre class="source lang-java linenums">package mx.att.digital.api.config;
+
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.core.Ordered;
+import org.springframework.web.filter.OncePerRequestFilter;
+
+import java.io.IOException;
+import java.util.Collections;
+
+@Configuration
+<span class="fc" id="L19">public class ApiPathRewriteFilterConfig {</span>
+
+<span class="fc" id="L21">  private static final Logger log = LoggerFactory.getLogger(ApiPathRewriteFilterConfig.class);</span>
+
+  // Prefijo lógico de la TMF676
+  private static final String MGMT_PREFIX = &quot;/paymentManagement&quot;;
+
+  // Prefijo típico del microservicio en preprod / WSO2
+  private static final String MS_PREFIX = &quot;/ms-api-tmf676-pymt-mgt&quot;;
+
+  @Bean
+  public FilterRegistrationBean&lt;OncePerRequestFilter&gt; apiPathRewriteFilter() {
+<span class="fc" id="L31">    FilterRegistrationBean&lt;OncePerRequestFilter&gt; reg = new FilterRegistrationBean&lt;&gt;();</span>
+<span class="fc" id="L32">    reg.setFilter(new OncePerRequestFilter() {</span>
+      @Override
+      protected void doFilterInternal(
+          HttpServletRequest request,
+          HttpServletResponse response,
+          FilterChain chain
+          ) throws ServletException, IOException {
+
+<span class="fc" id="L40">            final String originalUri = request.getRequestURI();</span>
+<span class="pc bpc" id="L41" title="1 of 2 branches missed.">            if (originalUri == null) {</span>
+<span class="nc" id="L42">              chain.doFilter(request, response);</span>
+<span class="nc" id="L43">              return;</span>
+            }
+
+            // Log de trazabilidad
+<span class="fc" id="L47">            log.info(&quot;[TMF676] Incoming URI: {}&quot;, originalUri);</span>
+
+            // 1) Normalizamos quitando el prefijo del micro si viene presente
+<span class="fc" id="L50">            String uri = normalizeUri(originalUri);</span>
+
+<span class="fc" id="L52">            log.info(&quot;[TMF676] Normalized URI (without MS_PREFIX): {}&quot;, uri);</span>
+
+            // 2) Si YA viene como /paymentManagement/v5/... lo dejamos pasar tal cual
+<span class="pc bpc" id="L55" title="1 of 2 branches missed.">            if (uri.startsWith(MGMT_PREFIX + &quot;/v5/&quot;)) {</span>
+<span class="nc" id="L56">              chain.doFilter(request, response);</span>
+<span class="nc" id="L57">              return;</span>
+            }
+
+            // 3) Buscamos /v5/ o /v4/ en cualquier parte de la URI normalizada
+<span class="fc" id="L61">            String normalized = resolveRewrittenPath(uri);</span>
+
+            // 4) Si logramos normalizar, hacemos forward a /paymentManagement/v5/...
+<span class="fc bfc" id="L64" title="All 2 branches covered.">            if (normalized != null) {</span>
+<span class="fc" id="L65">              final String target = MGMT_PREFIX + normalized;  // /paymentManagement/v5/token</span>
+<span class="fc" id="L66">              log.info(&quot;[TMF676] Rewriting URI '{}' -&gt; '{}'&quot;, originalUri, target);</span>
+<span class="fc" id="L67">              request.getRequestDispatcher(target).forward(request, response);</span>
+<span class="fc" id="L68">              return;</span>
+            }
+
+            // 5) Si no aplica ninguna regla, dejamos pasar
+<span class="fc" id="L72">            chain.doFilter(request, response);</span>
+<span class="fc" id="L73">          }</span>
+        });
+<span class="fc" id="L75">        reg.setOrder(Ordered.HIGHEST_PRECEDENCE);</span>
+<span class="fc" id="L76">        reg.setUrlPatterns(Collections.singletonList(&quot;/*&quot;));</span>
+<span class="fc" id="L77">        return reg;</span>
+      }
+
+      private String normalizeUri(String originalUri) {
+<span class="pc bpc" id="L81" title="1 of 2 branches missed.">        if (originalUri.startsWith(MS_PREFIX)) {</span>
+<span class="nc" id="L82">          String uri = originalUri.substring(MS_PREFIX.length());</span>
+<span class="nc bnc" id="L83" title="All 2 branches missed.">          return uri.isEmpty() ? &quot;/&quot; : uri;</span>
+        }
+<span class="fc" id="L85">        return originalUri;</span>
+      }
+
+      private String resolveRewrittenPath(String uri) {
+<span class="fc" id="L89">        int idx = uri.indexOf(&quot;/v5/&quot;);</span>
+<span class="fc bfc" id="L90" title="All 2 branches covered.">        if (idx &gt;= 0) {</span>
+          // Ej: /algo/v5/token -&gt; /v5/token
+<span class="fc" id="L92">          return uri.substring(idx);</span>
+        }
+
+<span class="fc" id="L95">        idx = uri.indexOf(&quot;/v4/&quot;);</span>
+<span class="fc bfc" id="L96" title="All 2 branches covered.">        if (idx &gt;= 0) {</span>
+          // Ej: /v4/token  -&gt; /v5/token
+<span class="fc" id="L98">          return &quot;/v5/&quot; + uri.substring(idx + 4);</span>
+        }
+
+<span class="fc" id="L101">        return null;</span>
+      }
+    }
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.13.202504020838</span></div></body></html>

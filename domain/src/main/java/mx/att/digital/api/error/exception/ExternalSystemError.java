@@ -1,7 +1,6 @@
 package mx.att.digital.api.error.exception;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-
 import lombok.Getter;
 import mx.att.digital.api.models.enums.ResultCode;
 

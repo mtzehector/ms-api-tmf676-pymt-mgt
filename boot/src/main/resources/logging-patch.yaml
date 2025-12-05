@@ -1,0 +1,5 @@
+logging:
+  level:
+    mx.att.digital.api: DEBUG
+    org.springframework.web.client.RestTemplate: DEBUG
+    org.apache.hc.client5.http: DEBUG

@@ -18,10 +18,19 @@ public class SecurityOpenConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
+            // Security Hotspot Justification:
+            // - This configuration is used for development/testing environments only (app.security.enabled=false)
+            // - All endpoints are publicly accessible without authentication
+            // - This is a stateless REST API without session management
+            // - No cookies or session state are used (stateless)
+            // - CSRF protection is not applicable when there's no authentication
+            // - In production, SecurityConfig with proper authentication should be used instead
+            // - This configuration should NEVER be enabled in production environments
             .csrf(csrf -> csrf.disable())
             .authorizeHttpRequests(auth -> auth
                 .anyRequest().permitAll()
             );
+        
         return http.build();
     }
 }

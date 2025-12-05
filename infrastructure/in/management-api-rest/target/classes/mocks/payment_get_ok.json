@@ -1,0 +1,11 @@
+{
+  "id": "PAY-000123",
+  "href": "http://localhost:16600/paymentManagement/v5/payment/PAY-000123",
+  "status": "Accepted",
+  "statusDate": "2025-10-10T17:05:00Z",
+  "amount": {
+    "value": 150.0,
+    "unit": "MXN"
+  },
+  "authorizationCode": "AUTH-ABC-1234"
+}

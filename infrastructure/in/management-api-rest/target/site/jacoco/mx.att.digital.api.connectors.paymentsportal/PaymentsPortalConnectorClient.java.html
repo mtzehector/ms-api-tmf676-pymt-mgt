@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>PaymentsPortalConnectorClient.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">management-api-rest</a> &gt; <a href="index.source.html" class="el_package">mx.att.digital.api.connectors.paymentsportal</a> &gt; <span class="el_source">PaymentsPortalConnectorClient.java</span></div><h1>PaymentsPortalConnectorClient.java</h1><pre class="source lang-java linenums">package mx.att.digital.api.connectors.paymentsportal;
+
+import jakarta.annotation.PostConstruct;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.*;
+import org.springframework.stereotype.Component;
+import org.springframework.web.client.RestTemplate;
+
+import java.util.HashMap;
+import java.util.Map;
+
+/**
+ * Cliente del conector de Payments Portal.
+ *
+ * Esta versión:
+ *  - Mantiene la firma pública fetchTokenResponse() sin parámetros.
+ *  - Lee, si existe, el body de la petición /token desde TokenRequestContext
+ *    (username, accessTokenId, channelId).
+ *  - Si algún campo NO viene en el body, se usan los valores por defecto
+ *    configurados (reqUsername, reqAccessTokenId, reqChannelId).
+ *  - Genera logs detallados del request/response hacia el conector.
+ */
+@Component
+public class PaymentsPortalConnectorClient {
+
+<span class="fc" id="L30">    private static final Logger log = LoggerFactory.getLogger(PaymentsPortalConnectorClient.class);</span>
+    private static final String FIELD_MESSAGE = &quot;message&quot;;
+    private static final String FIELD_TOKEN = &quot;token&quot;;
+
+    private final RestTemplate restTemplate;
+
+    @Value(&quot;${paymentsportal.connector.enabled:true}&quot;)
+    private boolean enabled;
+
+    @Value(&quot;${paymentsportal.connector.base-url:https://coremgmtdev.pre-prod.mx.att.com/paymentsportal-connector}&quot;)
+    private String baseUrl;
+
+    @Value(&quot;${paymentsportal.connector.token-path:/v1/token}&quot;)
+    private String tokenPath;
+
+    @Value(&quot;${paymentsportal.connector.username:admin}&quot;)
+    private String basicUser;
+
+    @Value(&quot;${paymentsportal.connector.password:admin}&quot;)
+    private String basicPassword;
+
+    @Value(&quot;${paymentsportal.connector.req-username:testuser123}&quot;)
+    private String reqUsername;
+
+    @Value(&quot;${paymentsportal.connector.req-access-token-id:token-abc-12345}&quot;)
+    private String reqAccessTokenId;
+
+    @Value(&quot;${paymentsportal.connector.req-channel-id:1}&quot;)
+    private Integer reqChannelId;
+
+    @Value(&quot;${paymentsportal.connector.http-version:1_1}&quot;)
+    private String httpVersion;
+
+<span class="fc" id="L63">    public PaymentsPortalConnectorClient(@Qualifier(&quot;restTemplate676&quot;) RestTemplate restTemplate) {</span>
+<span class="fc" id="L64">        this.restTemplate = restTemplate;</span>
+<span class="fc" id="L65">    }</span>
+
+    @PostConstruct
+    public void logConfig() {
+<span class="nc" id="L69">        log.info(&quot;[TMF676] paymentsportal.connector.enabled={}&quot;, enabled);</span>
+<span class="nc" id="L70">        log.info(&quot;[TMF676] paymentsportal.connector.base-url={} token-path={}&quot;, baseUrl, tokenPath);</span>
+<span class="nc" id="L71">        log.info(&quot;[TMF676] paymentsportal.connector.http-version={}&quot;, httpVersion);</span>
+<span class="nc" id="L72">        log.info(&quot;[TMF676] paymentsportal.connector.req-username(default)={} req-channel-id(default)={}&quot;,</span>
+                reqUsername, reqChannelId);
+<span class="nc" id="L74">    }</span>
+
+    /**
+     * Método principal llamado por el PaymentController.
+     * El body real se toma de TokenRequestContext, si está presente.
+     */
+    public TokenConnectorResponse fetchTokenResponse() {
+<span class="fc bfc" id="L81" title="All 2 branches covered.">        if (!enabled) {</span>
+<span class="fc" id="L82">            log.info(&quot;[TMF676] paymentsportal-connector deshabilitado por configuración; devolviendo stub-token-disabled&quot;);</span>
+<span class="fc" id="L83">            return new TokenConnectorResponse(&quot;stub-token-disabled&quot;, &quot;connector-disabled&quot;);</span>
+        }
+
+<span class="fc" id="L86">        String requestUrl = baseUrl + tokenPath;</span>
+<span class="fc" id="L87">        Map&lt;String, Object&gt; body = buildRequestBody();</span>
+
+        try {
+<span class="fc" id="L90">            log.info(&quot;[TMF676] Invocando paymentsportal-connector url={} httpVersion={} body={}&quot;,</span>
+                    requestUrl, httpVersion, body);
+
+<span class="fc" id="L93">            HttpHeaders headers = new HttpHeaders();</span>
+<span class="fc" id="L94">            headers.setContentType(MediaType.APPLICATION_JSON);</span>
+<span class="fc" id="L95">            headers.setAccept(java.util.List.of(MediaType.APPLICATION_JSON));</span>
+<span class="fc" id="L96">            headers.setBasicAuth(basicUser, basicPassword);</span>
+
+<span class="fc" id="L98">            HttpEntity&lt;Map&lt;String, Object&gt;&gt; entity = new HttpEntity&lt;&gt;(body, headers);</span>
+
+<span class="fc" id="L100">            ResponseEntity&lt;Map&lt;String, Object&gt;&gt; responseEntity = restTemplate.exchange(</span>
+                    requestUrl,
+                    HttpMethod.POST,
+                    entity,
+<span class="fc" id="L104">                    new ParameterizedTypeReference&lt;Map&lt;String, Object&gt;&gt;() {}</span>
+            );
+
+<span class="fc" id="L107">            log.info(&quot;[TMF676] Respuesta de paymentsportal-connector status={} body={}&quot;, </span>
+<span class="fc" id="L108">                    responseEntity.getStatusCode().value(), responseEntity.getBody());</span>
+
+<span class="fc" id="L110">            return validateAndExtractResponse(responseEntity, requestUrl, body);</span>
+
+<span class="fc" id="L112">        } catch (Exception ex) {</span>
+<span class="fc" id="L113">            throw new IllegalStateException(</span>
+                    &quot;Error llamando a paymentsportal-connector. requestUrl=&quot; + requestUrl + &quot;, body=&quot; + body, ex);
+        }
+    }
+
+    private Map&lt;String, Object&gt; buildRequestBody() {
+<span class="fc" id="L119">        TokenRequestPlaceholder request = TokenRequestContext.get();</span>
+        
+<span class="fc" id="L121">        String username = getValueOrDefault(request, TokenRequestPlaceholder::getUsername, reqUsername);</span>
+<span class="fc" id="L122">        String accessTokenId = getValueOrDefault(request, TokenRequestPlaceholder::getAccessTokenId, reqAccessTokenId);</span>
+<span class="fc" id="L123">        Integer channelId = getChannelIdOrDefault(request);</span>
+
+<span class="fc" id="L125">        Map&lt;String, Object&gt; body = new HashMap&lt;&gt;();</span>
+<span class="fc" id="L126">        body.put(&quot;username&quot;, username);</span>
+<span class="fc" id="L127">        body.put(&quot;accessTokenId&quot;, accessTokenId);</span>
+<span class="fc" id="L128">        body.put(&quot;channelId&quot;, channelId);</span>
+<span class="fc" id="L129">        return body;</span>
+    }
+
+    private String getValueOrDefault(TokenRequestPlaceholder request, 
+                                     java.util.function.Function&lt;TokenRequestPlaceholder, String&gt; getter, 
+                                     String defaultValue) {
+<span class="fc bfc" id="L135" title="All 2 branches covered.">        if (request == null) {</span>
+<span class="fc" id="L136">            return defaultValue;</span>
+        }
+<span class="fc" id="L138">        String value = getter.apply(request);</span>
+<span class="pc bpc" id="L139" title="2 of 4 branches missed.">        return (value != null &amp;&amp; !value.isEmpty()) ? value : defaultValue;</span>
+    }
+
+    private Integer getChannelIdOrDefault(TokenRequestPlaceholder request) {
+<span class="pc bpc" id="L143" title="1 of 4 branches missed.">        return (request != null &amp;&amp; request.getChannelId() != null) </span>
+<span class="fc" id="L144">                ? request.getChannelId() </span>
+<span class="fc" id="L145">                : reqChannelId;</span>
+    }
+
+    private TokenConnectorResponse validateAndExtractResponse(ResponseEntity&lt;Map&lt;String, Object&gt;&gt; responseEntity, 
+                                                            String requestUrl, 
+                                                            Map&lt;String, Object&gt; requestBody) {
+<span class="fc" id="L151">        Map&lt;String, Object&gt; map = getResponseBodyOrEmpty(responseEntity);</span>
+        
+<span class="fc" id="L153">        validateSuccessfulResponse(responseEntity, map, requestUrl, requestBody);</span>
+<span class="fc" id="L154">        validateTokenField(map, requestUrl, requestBody);</span>
+
+<span class="fc" id="L156">        String token = extractFieldAsString(map, FIELD_TOKEN);</span>
+<span class="fc" id="L157">        String message = extractFieldAsString(map, FIELD_MESSAGE);</span>
+
+<span class="fc" id="L159">        return new TokenConnectorResponse(token, message);</span>
+    }
+
+    private Map&lt;String, Object&gt; getResponseBodyOrEmpty(ResponseEntity&lt;Map&lt;String, Object&gt;&gt; responseEntity) {
+<span class="fc" id="L163">        Map&lt;String, Object&gt; responseBody = responseEntity.getBody();</span>
+<span class="pc bpc" id="L164" title="1 of 2 branches missed.">        return responseBody != null ? responseBody : Map.of();</span>
+    }
+
+    private void validateSuccessfulResponse(ResponseEntity&lt;Map&lt;String, Object&gt;&gt; responseEntity, 
+                                           Map&lt;String, Object&gt; map, 
+                                           String requestUrl, 
+                                           Map&lt;String, Object&gt; requestBody) {
+<span class="fc bfc" id="L171" title="All 2 branches covered.">        if (!responseEntity.getStatusCode().is2xxSuccessful()) {</span>
+<span class="fc" id="L172">            String msg = extractFieldAsString(map, FIELD_MESSAGE);</span>
+<span class="pc bpc" id="L173" title="1 of 2 branches missed.">            if (msg == null) {</span>
+<span class="fc" id="L174">                msg = &quot;Respuesta de error sin campo 'message'&quot;;</span>
+            }
+<span class="fc" id="L176">            int status = responseEntity.getStatusCode().value();</span>
+<span class="fc" id="L177">            String detail = buildErrorDetail(requestUrl, requestBody);</span>
+<span class="fc" id="L178">            throw new IllegalStateException(detail + &quot; status=&quot; + status + &quot; message=&quot; + msg);</span>
+        }
+<span class="fc" id="L180">    }</span>
+
+    private void validateTokenField(Map&lt;String, Object&gt; map, String requestUrl, Map&lt;String, Object&gt; requestBody) {
+<span class="fc bfc" id="L183" title="All 2 branches covered.">        if (!map.containsKey(FIELD_TOKEN)) {</span>
+<span class="pc bpc" id="L184" title="1 of 2 branches missed.">            String message = map.containsKey(FIELD_MESSAGE)</span>
+<span class="fc" id="L185">                    ? String.valueOf(map.get(FIELD_MESSAGE))</span>
+<span class="pc" id="L186">                    : &quot;Connector response missing 'token' field&quot;;</span>
+<span class="fc" id="L187">            String detail = buildErrorDetail(requestUrl, requestBody);</span>
+<span class="fc" id="L188">            throw new IllegalStateException(detail + &quot; message=&quot; + message);</span>
+        }
+<span class="fc" id="L190">    }</span>
+
+    private String extractFieldAsString(Map&lt;String, Object&gt; map, String fieldName) {
+<span class="fc" id="L193">        Object fieldObj = map.get(fieldName);</span>
+<span class="fc bfc" id="L194" title="All 2 branches covered.">        return fieldObj == null ? null : fieldObj.toString();</span>
+    }
+
+    private String buildErrorDetail(String requestUrl, Map&lt;String, Object&gt; requestBody) {
+<span class="fc" id="L198">        return &quot;Error en respuesta de paymentsportal-connector. requestUrl=&quot; + requestUrl</span>
+                + &quot;, body=&quot; + requestBody;
+    }
+
+    /**
+         * DTO interno de respuesta.
+         */
+<span class="fc" id="L205">        public record TokenConnectorResponse(String token, String message) {</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.13.202504020838</span></div></body></html>

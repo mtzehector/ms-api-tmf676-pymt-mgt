@@ -1,0 +1,135 @@
+<!-- ========================================= -->
+<!-- COPIAR ESTOS PLUGINS AL POM.XML PRINCIPAL -->
+<!-- En la sección <build><plugins> -->
+<!-- ========================================= -->
+
+<!-- 1. SPOTBUGS - Análisis estático de bugs -->
+<plugin>
+    <groupId>com.github.spotbugs</groupId>
+    <artifactId>spotbugs-maven-plugin</artifactId>
+    <version>4.8.6.4</version>
+    <configuration>
+        <effort>Max</effort>
+        <threshold>Low</threshold>
+        <xmlOutput>true</xmlOutput>
+        <excludeFilterFile>spotbugs-exclude.xml</excludeFilterFile>
+    </configuration>
+</plugin>
+
+<!-- 2. CHECKSTYLE - Verificación de estilo -->
+<plugin>
+    <groupId>org.apache.maven.plugins</groupId>
+    <artifactId>maven-checkstyle-plugin</artifactId>
+    <version>3.5.0</version>
+    <configuration>
+        <configLocation>checkstyle.xml</configLocation>
+        <consoleOutput>true</consoleOutput>
+        <failsOnError>false</failsOnError>
+        <violationSeverity>warning</violationSeverity>
+    </configuration>
+</plugin>
+
+<!-- 3. PMD - Detección de code smells -->
+<plugin>
+    <groupId>org.apache.maven.plugins</groupId>
+    <artifactId>maven-pmd-plugin</artifactId>
+    <version>3.25.0</version>
+    <configuration>
+        <rulesets>
+            <ruleset>/rulesets/java/basic.xml</ruleset>
+            <ruleset>/rulesets/java/design.xml</ruleset>
+        </rulesets>
+        <linkXRef>false</linkXRef>
+        <failOnViolation>false</failOnViolation>
+    </configuration>
+</plugin>
+
+<!-- 4. OWASP DEPENDENCY CHECK - Seguridad de dependencias -->
+<plugin>
+    <groupId>org.owasp</groupId>
+    <artifactId>dependency-check-maven</artifactId>
+    <version>11.2.0</version>
+    <configuration>
+        <format>ALL</format>
+        <failBuildOnCVSS>7</failBuildOnCVSS>
+    </configuration>
+</plugin>
+
+<!-- 5. PITEST - Mutation Testing (OPCIONAL pero recomendado) -->
+<plugin>
+    <groupId>org.pitest</groupId>
+    <artifactId>pitest-maven</artifactId>
+    <version>1.17.3</version>
+    <dependencies>
+        <dependency>
+            <groupId>org.pitest</groupId>
+            <artifactId>pitest-junit5-plugin</artifactId>
+            <version>1.2.1</version>
+        </dependency>
+    </dependencies>
+    <configuration>
+        <targetClasses>
+            <param>mx.att.digital.api.*</param>
+        </targetClasses>
+        <targetTests>
+            <param>mx.att.digital.api.*</param>
+        </targetTests>
+        <outputFormats>
+            <outputFormat>HTML</outputFormat>
+        </outputFormats>
+        <mutationThreshold>70</mutationThreshold>
+        <timestampedReports>false</timestampedReports>
+    </configuration>
+</plugin>
+
+<!-- ========================================= -->
+<!-- COPIAR ESTAS DEPENDENCIAS -->
+<!-- En la sección <dependencies> -->
+<!-- ========================================= -->
+
+<!-- ARCHUNIT - Tests de arquitectura -->
+<dependency>
+    <groupId>com.tngtech.archunit</groupId>
+    <artifactId>archunit-junit5</artifactId>
+    <version>1.3.0</version>
+    <scope>test</scope>
+</dependency>
+
+<!-- REST ASSURED - Tests de API REST -->
+<dependency>
+    <groupId>io.rest-assured</groupId>
+    <artifactId>rest-assured</artifactId>
+    <version>5.5.0</version>
+    <scope>test</scope>
+</dependency>
+<dependency>
+    <groupId>io.rest-assured</groupId>
+    <artifactId>spring-mock-mvc</artifactId>
+    <version>5.5.0</version>
+    <scope>test</scope>
+</dependency>
+
+<!-- ========================================= -->
+<!-- COMANDOS ÚTILES PARA EJECUTAR -->
+<!-- ========================================= -->
+
+<!--
+# Análisis completo (ejecutar antes de commit):
+mvn clean verify spotbugs:check checkstyle:check pmd:check
+
+# Análisis de seguridad de dependencias:
+mvn dependency-check:check
+
+# Mutation testing (toma varios minutos):
+mvn pitest:mutationCoverage
+
+# Ver reporte de mutaciones:
+start target/pit-reports/index.html
+
+# Análisis de SonarCloud:
+mvn clean verify sonar:sonar -Dsonar.token=TU_TOKEN
+
+# Verificar cobertura:
+mvn clean test jacoco:report
+start target/site/jacoco/index.html
+-->

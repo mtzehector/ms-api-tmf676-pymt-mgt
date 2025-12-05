@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>DomainExceptionHandler.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">management-domain</a> &gt; <a href="index.source.html" class="el_package">mx.att.digital.api.error.exception</a> &gt; <span class="el_source">DomainExceptionHandler.java</span></div><h1>DomainExceptionHandler.java</h1><pre class="source lang-java linenums">package mx.att.digital.api.error.exception;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
+
+import java.util.HashMap;
+import java.util.Map;
+
+
+/**
+ * The Class DomainExceptionHandler.
+ */
+@RestControllerAdvice
+<span class="fc" id="L18">public class DomainExceptionHandler {</span>
+
+	/** The Constant REASON. */
+	public static final String REASON = &quot;reason&quot;;
+	
+	/** The Constant DETAILS. */
+	public static final String DETAILS = &quot;details&quot;;
+	
+	/** The Constant CODE. */
+	public static final String CODE = &quot;code&quot;;
+
+	/**
+	 * Handle validation exceptions.
+	 *
+	 * @param ex the ex
+	 * @return the response entity
+	 */
+	// Maneja errores de validación de @Valid en @RequestBody
+	@ExceptionHandler(MethodArgumentNotValidException.class)
+	public ResponseEntity&lt;Map&lt;String, Object&gt;&gt; handleValidationExceptions(MethodArgumentNotValidException ex) {
+<span class="fc" id="L38">		Map&lt;String, String&gt; fieldErrors = new HashMap&lt;&gt;();</span>
+<span class="fc bfc" id="L39" title="All 2 branches covered.">		for (FieldError error : ex.getBindingResult().getFieldErrors()) {</span>
+<span class="fc" id="L40">			fieldErrors.put(error.getField(), error.getDefaultMessage());</span>
+<span class="fc" id="L41">		}</span>
+		
+<span class="fc" id="L43">		Map&lt;String, Object&gt; errors = new HashMap&lt;&gt;();</span>
+<span class="fc" id="L44">		errors.put(CODE, &quot;30&quot;);</span>
+<span class="fc" id="L45">		errors.put(REASON, &quot;Formato Invalido&quot;);</span>
+<span class="fc" id="L46">		errors.put(DETAILS, fieldErrors);</span>
+
+<span class="fc" id="L48">		return new ResponseEntity&lt;&gt;(errors, HttpStatus.BAD_REQUEST);</span>
+	}
+
+	/**
+	 * Handle validation exception.
+	 *
+	 * @param ex the ex
+	 * @return the response entity
+	 */
+	@ExceptionHandler(ValidationResponseException.class)
+	public ResponseEntity&lt;Map&lt;String, Object&gt;&gt; handleValidationException(ValidationResponseException ex) {
+<span class="fc" id="L59">		Map&lt;String, Object&gt; error = new HashMap&lt;&gt;();</span>
+<span class="fc" id="L60">		error.put(CODE, ex.getCode());</span>
+<span class="fc" id="L61">		error.put(REASON, ex.getReason());</span>
+<span class="fc" id="L62">		error.put(DETAILS, ex.getDetails());</span>
+
+<span class="fc" id="L64">		return new ResponseEntity&lt;&gt;(error, HttpStatus.BAD_REQUEST);</span>
+	}
+
+	/**
+	 * Handle all exceptions.
+	 *
+	 * @param ex the ex
+	 * @return the response entity
+	 */
+	// Maneja otras excepciones no controladas
+	@ExceptionHandler(Exception.class)
+	public ResponseEntity&lt;Map&lt;String, Object&gt;&gt; handleAllExceptions(Exception ex) {
+		// Log at ERROR level for unexpected exceptions
+<span class="fc" id="L77">		org.slf4j.LoggerFactory.getLogger(DomainExceptionHandler.class)</span>
+<span class="fc" id="L78">			.error(&quot;Unexpected error occurred&quot;, ex);</span>
+			
+<span class="fc" id="L80">		Map&lt;String, Object&gt; error = new HashMap&lt;&gt;();</span>
+<span class="fc" id="L81">		error.put(CODE, &quot;500&quot;);</span>
+<span class="fc" id="L82">		error.put(REASON, &quot;Error interno del servidor&quot;);</span>
+<span class="fc" id="L83">		error.put(DETAILS, ex.getMessage());</span>
+
+<span class="fc" id="L85">		return new ResponseEntity&lt;&gt;(error, HttpStatus.INTERNAL_SERVER_ERROR);</span>
+	}
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.13.202504020838</span></div></body></html>

@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ResultCode.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">management-domain</a> &gt; <a href="index.source.html" class="el_package">mx.att.digital.api.models.enums</a> &gt; <span class="el_source">ResultCode.java</span></div><h1>ResultCode.java</h1><pre class="source lang-java linenums">package mx.att.digital.api.models.enums;
+
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+
+
+/**
+ * The Enum ResultCode.
+ */
+<span class="fc" id="L10">@AllArgsConstructor</span>
+@Getter
+public enum ResultCode {
+    
+    /** The successful. */
+<span class="fc" id="L15">    SUCCESSFUL(0, &quot;Exitoso&quot;),</span>
+    
+    /** The others. */
+<span class="fc" id="L18">    OTHERS(5, &quot;Otros&quot;),</span>
+    
+    /** The invalid amount. */
+<span class="fc" id="L21">    INVALID_AMOUNT(13, &quot;Monto Inválido&quot;),</span>
+    
+    /** The invalid format. */
+<span class="fc" id="L24">    INVALID_FORMAT(30, &quot;Formato Inválido&quot;),</span>
+    
+    /** The contact telephone company. */
+<span class="fc" id="L27">    CONTACT_TELEPHONE_COMPANY(60, &quot;Comunicarse con la Telefonica&quot;),</span>
+    
+    /** The invalid phone. */
+<span class="fc" id="L30">    INVALID_PHONE(83, &quot;Teléfono Inválido&quot;),</span>
+    
+    /** The fallen authorizer. */
+<span class="fc" id="L33">    FALLEN_AUTHORIZER(89, &quot;Autorizador Abajo&quot;),</span>
+    
+    /** The timeout. */
+<span class="fc" id="L36">    TIMEOUT(92, &quot;Timeout&quot;),</span>
+    
+    /** The repeated transaction. */
+<span class="fc" id="L39">    REPEATED_TRANSACTION(94, &quot;Transacción Repetida&quot;);</span>
+
+    /** The code. */
+    private final int code;
+    
+    /** The message. */
+    private final String message;
+
+    /**
+     * From code.
+     *
+     * @param code the code
+     * @return the result code
+     */
+    public static ResultCode fromCode(int code) {
+<span class="fc bfc" id="L54" title="All 2 branches covered.">        for (ResultCode value : values()) {</span>
+<span class="fc bfc" id="L55" title="All 2 branches covered.">            if (value.code == code) {</span>
+<span class="fc" id="L56">                return value;</span>
+            }
+        }
+<span class="fc" id="L59">        throw new IllegalArgumentException(&quot;Unknown code: &quot; + code);</span>
+    }
+
+    /**
+     * From message.
+     *
+     * @param message the message
+     * @return the result code
+     */
+    public static ResultCode fromMessage(String message) {
+<span class="fc bfc" id="L69" title="All 2 branches covered.">        for (ResultCode value : values()) {</span>
+<span class="fc bfc" id="L70" title="All 2 branches covered.">            if (value.message.equalsIgnoreCase(message)) {</span>
+<span class="fc" id="L71">                return value;</span>
+            }
+        }
+<span class="fc" id="L74">        throw new IllegalArgumentException(&quot;Unknown message: &quot; + message);</span>
+    }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.13.202504020838</span></div></body></html>

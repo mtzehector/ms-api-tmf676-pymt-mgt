@@ -9,8 +9,9 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class ManagementAdapterTest {
@@ -24,7 +25,7 @@ class ManagementAdapterTest {
     private ManagementAdapter adapter;
 
     @Test
-    void saveAgreement_callsValidateAndPersist() {
+    void saveAgreementCallsValidateAndPersist() {
         AgreementDomain in = AgreementDomain.builder().name("Agg").build();
         AgreementDomain expected = AgreementDomain.builder().name("Agg").build();
 
@@ -38,7 +39,7 @@ class ManagementAdapterTest {
     }
 
     @Test
-    void getAgreementByUpdate_delegatesToPersistence() {
+    void getAgreementByUpdateDelegatesToPersistence() {
         AgreementDomain req = AgreementDomain.builder().name("Req").build();
         AgreementDomain resp = AgreementDomain.builder().name("Resp").build();
 

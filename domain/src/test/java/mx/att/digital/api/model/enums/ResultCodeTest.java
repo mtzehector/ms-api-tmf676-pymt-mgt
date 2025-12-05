@@ -1,8 +1,7 @@
 package mx.att.digital.api.model.enums;
 
-import org.junit.jupiter.api.Test;
-
 import mx.att.digital.api.models.enums.ResultCode;
+import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
