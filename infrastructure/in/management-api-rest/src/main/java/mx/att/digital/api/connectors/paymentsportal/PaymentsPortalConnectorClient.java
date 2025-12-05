@@ -117,7 +117,7 @@ public class PaymentsPortalConnectorClient {
         body.put("channelId", reqChannelId);
 
         try {
-            log.info("Invocando paymentsportal-connector url={} httpVersion={} body={}",
+            //log.info("Invocando paymentsportal-connector url={} httpVersion={} body={}",
                     requestUrl, httpVersion, body);
 
             HttpHeaders headers = new HttpHeaders();
@@ -133,7 +133,7 @@ public class PaymentsPortalConnectorClient {
             int status = responseEntity.getStatusCode().value();
             Map<?, ?> map = responseEntity.getBody() != null ? responseEntity.getBody() : Map.of();
 
-            log.info("Respuesta de paymentsportal-connector status={} body={}", status, map);
+            //log.info("Respuesta de paymentsportal-connector status={} body={}", status, map);
 
             // Si el conector responde 4xx/5xx con JSON, lo interpretamos:
             if (!responseEntity.getStatusCode().is2xxSuccessful()) {
